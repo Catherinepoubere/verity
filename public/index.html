@@ -143,8 +143,9 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-o
 /* welcome */
 .welcome-hero{height:430px;flex:none;padding:26px var(--gutter-r) 30px var(--gutter);display:flex;flex-direction:column;justify-content:flex-end;gap:16px}
 .hero-mark{font-family:var(--font-display);font-weight:300;font-size:var(--t-hero);line-height:.85;letter-spacing:-0.035em}
-.welcome-hero p{font-family:var(--font-display);font-weight:300;font-size:1.875rem;line-height:1.1;color:var(--on-green);text-wrap:balance}
+.welcome-hero p{font-family:var(--font-display);font-weight:300;font-size:1.875rem;line-height:1.1;color:var(--on-green)}
 .welcome-hero p em{font-style:italic;font-weight:300}
+.welcome-hero .nw{white-space:nowrap} /* break only between the two phrases, keeping "More truth" together */
 .welcome-body{padding:24px var(--gutter-r) 20px var(--gutter);display:flex;flex-direction:column;gap:18px;flex:1}
 .welcome-body > .disclaimer{margin-top:auto;padding-top:24px}
 
@@ -294,7 +295,7 @@ html.booth .booth-only{display:flex!important}
   <section class="view" id="v-welcome" aria-labelledby="h-welcome">
     <div class="on-green welcome-hero">
       <h1 id="h-welcome" class="hero-mark foil-text">verity</h1>
-      <p>Less <em>noise</em>. More <em>truth</em>, tailored to <em>you</em>.</p>
+      <p><span class="nw">Less <em>noise</em>. More <em>truth</em>,</span> <span class="nw">tailored to <em>you</em>.</span></p>
     </div>
     <div class="welcome-body">
       <p class="lead">Paste a tip you saw about skincare, wellness or money. Verity checks it against the evidence, then checks if it fits you.</p>
