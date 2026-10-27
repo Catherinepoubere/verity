@@ -3,6 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Readable } from "node:stream";
 import { normalize, sanitizeRequest, checkTip, buildPrompt, requestParams, GUARD_RE } from "../lib/verity.js";
+process.env.ANTHROPIC_API_KEY ||= "test-key"; // the handler refuses to call Claude without a key
 import handler, { setClientForTests } from "../api/check.js";
 
 const good = {

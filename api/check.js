@@ -108,11 +108,14 @@ export default async function handler(req, res){
     log({ warn: "counter_unavailable" }); // fail open: a broken counter shouldn't take the booth down
   }
 
+  if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN){
+    return done(502, { error: "upstream" }, { error: "upstream", reason: "missing_api_key" });
+  }
   try{
     const { data, attempts } = await checkTip(getClient(), input, { model: MODEL });
     return done(200, data, { result: data.status, attempts });
   }catch(e){
     const code = (e && e.code) || "upstream";
-    return done(code === "timeout" ? 504 : 502, { error: code }, { error: code, upstream: e && e.status });
+    return done(code === "timeout" ? 504 : 502, { error: code }, { error: code, upstream: e && e.status, apiType: e && e.apiType, apiMessage: e && e.apiMessage, model: MODEL });
   }
 }
