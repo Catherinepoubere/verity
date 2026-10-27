@@ -11,7 +11,18 @@ const MAX_DAILY = Number(process.env.MAX_DAILY_CHECKS) || 1000;
 const MODEL = process.env.VERITY_MODEL || DEFAULT_MODEL;
 
 let client = null;
-function getClient(){ return client || (client = new Anthropic()); }
+// Keys pasted into a dashboard often carry a stray space, line break or quotes, which make
+// every call fail instantly. Clean them off, and log (never the key) when that happened.
+function cleanKey(raw){ return String(raw || "").trim().replace(/^["']+|["']+$/g, "").trim(); }
+function getClient(){
+  if (client) return client;
+  const raw = process.env.ANTHROPIC_API_KEY;
+  if (!raw) return (client = new Anthropic());
+  const key = cleanKey(raw);
+  if (key !== raw) log({ warn: "api_key_had_extra_characters" });
+  if (!/^sk-ant-[A-Za-z0-9_-]+$/.test(key)) log({ warn: "api_key_unexpected_format", length: key.length });
+  return (client = new Anthropic({ apiKey: key }));
+}
 export function setClientForTests(c){ client = c; }
 
 /* ---------- counters: Upstash Redis when configured, else a best-effort in-memory map ---------- */
@@ -116,6 +127,9 @@ export default async function handler(req, res){
     return done(200, data, { result: data.status, attempts });
   }catch(e){
     const code = (e && e.code) || "upstream";
-    return done(code === "timeout" ? 504 : 502, { error: code }, { error: code, upstream: e && e.status, apiType: e && e.apiType, apiMessage: e && e.apiMessage, model: MODEL });
+    // An error with no code was thrown before any request left (for example while creating the client).
+    // Log its name and message, with anything key-shaped removed.
+    const local = e && !e.code ? { errName: e.name, errMessage: String(e.message || "").replace(/sk-ant-[A-Za-z0-9_-]+/g, "[key]").slice(0, 200) } : {};
+    return done(code === "timeout" ? 504 : 502, { error: code }, { error: code, upstream: e && e.status, apiType: e && e.apiType, apiMessage: e && e.apiMessage, errName: e && e.errName, errCause: e && e.errCause, model: MODEL, ...local });
   }
 }
