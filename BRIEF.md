@@ -14,7 +14,7 @@ Verity is a mobile web app that checks advice from social media against the evid
 
 A personal log turns what you try into your own evidence over time.
 
-**Tagline:** Your proof, not their posts.
+**Tagline:** Less *noise*. More *truth*, tailored to *you*. (Set in Newsreader Light, with noise, truth and you in italic. Replaces the earlier "Your proof, not their posts.")
 **Supporting lines:** Check the tip. Then check if it's for you. · Less noise. More you.
 
 **The insight:** fact-checkers ask "Is this true?" Verity also asks "Is this true for me?" and explains its reasoning every time.

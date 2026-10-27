@@ -1,6 +1,6 @@
 # verity
 
-**Your proof, not their posts.**
+**Less *noise*. More *truth*, tailored to *you*.**
 
 Verity is a mobile web app that checks advice from social media against the evidence and against you. Paste a tip you saw about skincare, wellness or money, and Verity tells you what it claims, how well the evidence supports it, any red flags, whether it fits your profile, and a safer next step. Fact-checkers ask "Is this true?" Verity also asks "Is this true for me?"
 
