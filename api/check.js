@@ -20,7 +20,8 @@ function getClient(){
   if (!raw) return (client = new Anthropic());
   const key = cleanKey(raw);
   if (key !== raw) log({ warn: "api_key_had_extra_characters" });
-  if (!/^sk-ant-[A-Za-z0-9_-]+$/.test(key)) log({ warn: "api_key_unexpected_format", length: key.length });
+  if (/[^\x21-\x7E]/.test(key)) log({ warn: "api_key_has_invalid_characters", hint: "re-copy the full key; look for curly quotes, an ellipsis or a line break" });
+  else if (!/^sk-ant-[A-Za-z0-9_-]+$/.test(key)) log({ warn: "api_key_unexpected_format", length: key.length });
   return (client = new Anthropic({ apiKey: key }));
 }
 export function setClientForTests(c){ client = c; }
