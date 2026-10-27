@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.local
+.vercel/
+eval/results/*
+!eval/results/.gitkeep
+!eval/results/final.csv
+!eval/results/final.json
+.DS_Store

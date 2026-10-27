@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Verity</title>
+<meta name="description" content="Verity checks advice from social media against the evidence and against you.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#F8F5EE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Visual spec: reference/design/F-*.dc.html plus the typography tokens in BRIEF.md section 4.
+   Newsreader for display and reading; IBM Plex Mono for small text, labels, controls and data. Light theme only for v1. */
+:root{
+  color-scheme:light;
+  /* Faces. Swap --font-display for a licensed face (e.g. Escrow) in one place. */
+  --font-display:"Newsreader","Times New Roman",Georgia,serif;
+  --font-text:"Newsreader","Times New Roman",Georgia,serif;
+  --font-mono:"IBM Plex Mono","SFMono-Regular",Menlo,"Courier New",monospace;
+  /* Type scale (px at 16px root) */
+  --t-micro:0.6875rem;   /* 11 */
+  --t-label:0.75rem;     /* 12 */
+  --t-control:0.8125rem; /* 13 */
+  --t-button:0.875rem;   /* 14 */
+  --t-body:1rem;         /* 16 */
+  --t-lead:1.125rem;     /* 18 */
+  --t-quote:1.3125rem;   /* 21 */
+  --t-h3:1.5rem;         /* 24 */
+  --t-h2:2.125rem;       /* 34 */
+  --t-h1:2.75rem;        /* 44 */
+  --t-verdict:3.625rem;  /* 58 */
+  --t-hero:7.375rem;     /* 118 */
+  /* Color */
+  --ivory:#F8F5EE; --field:#FFFDF8; --ink:#10281F; --stone:#55665E;
+  --hairline:rgba(16,40,31,0.13); --control-line:rgba(16,40,31,0.25);
+  --green:#0F3B2E;
+  --velvet:radial-gradient(ellipse 140% 90% at 20% 0%, #175443 0%, #0F3B2E 50%, #06211A 100%);
+  --foil:linear-gradient(100deg, #B8912F, #F3E29A 40%, #C9A227 60%, #EBD082 80%, #B08A2A);
+  --foil-line:linear-gradient(90deg, #B8912F, #F3E29A 35%, #C9A227 55%, #EBD082 78%, #B08A2A);
+  --foil-dot:linear-gradient(135deg, #B8912F, #F3E29A 45%, #C9A227 70%, #B08A2A);
+  --foil-solid:#C9A227; --foil-text:#E9CC74;
+  --on-green:#FFFFFF; --on-green-2:#C9D6CF; --on-green-3:#A9C2B6; --on-green-quote:#DCE6E0; --drift:#5E8676;
+  --supported:#2E7D5B; --mixed:#B45F14; --notsup:#B23A2E; --promo:#6B4FA1;
+  --gutter:max(22px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(22px, env(safe-area-inset-right, 0px));
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+html.booth{font-size:17.5px} /* booth: larger text everywhere, since the scale is in rem */
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--font-text);font-optical-sizing:auto;font-size:var(--t-body);font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::after{content:"";position:fixed;inset:0;background-image:var(--grain);opacity:.035;pointer-events:none;z-index:100}
+h1,h2,h3,p,figure{margin:0}
+a{color:var(--green)} a:hover{color:var(--ink)}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.on-green :focus-visible{outline-color:var(--foil-text)}
+[tabindex="-1"]:focus{outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Mono: everything small, every control, every number. Never letter-spaced, sentence case only. */
+.label,.meta,.dateline,.scale-labels,.disclaimer,.hint,.label-strong,
+button,.btn,.link,nav,.seg,.chips,legend,label,select{
+  font-family:var(--font-mono);font-weight:400;letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums
+}
+.label,.meta,.dateline,.scale-labels,.hint{font-size:var(--t-label);line-height:1.45;color:var(--stone)}
+.disclaimer{font-size:var(--t-micro);line-height:1.45;color:var(--stone)}
+nav,.seg,.chips,select{font-size:var(--t-control)}
+button,.btn,.link{font-size:var(--t-button);font-weight:500;color:inherit}
+legend,label,.label-strong{font-size:var(--t-control);font-weight:500;color:var(--ink)}
+legend .label{font-weight:400}
+
+/* Display and reading */
+.h1{font-family:var(--font-display);font-weight:300;font-size:var(--t-h1);line-height:1;letter-spacing:-0.02em;text-wrap:balance}
+.h2{font-family:var(--font-display);font-weight:300;font-size:var(--t-h2);line-height:1;text-wrap:balance}
+.h3{font-family:var(--font-display);font-weight:300;font-size:var(--t-h3);line-height:1.1}
+.quote{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:var(--t-quote);line-height:1.3}
+.lead{font-size:var(--t-lead);line-height:1.5}
+.muted{color:var(--stone)}
+.foil-text{color:var(--foil-text);background:var(--foil);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* layout: one phone column, centered on desktop */
+.app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+main{flex:1;display:flex;flex-direction:column}
+.view{flex:1;display:flex;flex-direction:column}
+.pad{padding:18px var(--gutter-r) 24px var(--gutter)}
+.stack{display:flex;flex-direction:column}
+
+/* green panels */
+.on-green{position:relative;overflow:hidden;background:var(--velvet);color:var(--on-green)}
+.on-green::before{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none}
+.on-green > *{position:relative}
+.on-green .label,.on-green .meta,.on-green .scale-labels{color:var(--on-green-2)}
+.on-green .disclaimer{color:var(--on-green-3)}
+.on-green .link{color:var(--on-green)}
+
+/* wordmark */
+.mark-ivory{display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:400;font-size:1.625rem;letter-spacing:-0.01em;color:var(--green);line-height:1.2;background:none;border:0;padding:0;cursor:pointer}
+.mark-ivory .dot{width:6px;height:6px;margin-left:2px;border-radius:50%;background:var(--foil-dot)}
+.mark-green{font-family:var(--font-display);font-weight:400;font-size:1.75rem;letter-spacing:-0.01em;line-height:1.2;background:var(--foil);-webkit-background-clip:text;background-clip:text;color:var(--foil-text);-webkit-text-fill-color:transparent;border:0;padding:0;cursor:pointer}
+header.top{display:flex;align-items:baseline;justify-content:space-between;padding:20px var(--gutter-r) 0 var(--gutter)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 24px;border:0;border-radius:0;background:var(--green);color:#FFFFFF;box-shadow:inset 0 -2px 0 var(--foil-solid);cursor:pointer;text-decoration:none}
+.btn:hover{color:#FFFFFF}
+.btn.tall{min-height:54px}
+.btn.hero{background:var(--foil);color:#0A1F18;box-shadow:none}
+.btn.hero:hover{color:#0A1F18}
+.btn[disabled]{opacity:.6;cursor:default}
+.link{display:inline-flex;align-items:center;min-height:44px;padding:0;border:0;background:none;color:var(--green);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--foil-solid);cursor:pointer}
+.link.center{justify-content:center}
+.link.small{font-size:var(--t-label);min-height:32px}
+
+/* selectable controls */
+fieldset{margin:0;padding:0;border:0;min-width:0}
+legend{padding:0 0 8px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+.seg button{min-height:44px;padding:4px 6px;border:1px solid var(--control-line);border-left:0;border-radius:0;background:transparent;color:var(--ink);font-size:var(--t-control);font-weight:400;line-height:1.25;cursor:pointer}
+.seg button:first-child{border-left:1px solid var(--control-line)}
+.seg.sm button{min-height:40px;font-size:var(--t-label)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{min-height:40px;padding:0 14px;border:1px solid var(--control-line);border-radius:0;background:transparent;color:var(--ink);font-size:var(--t-control);font-weight:400;cursor:pointer}
+.seg button[aria-pressed="true"],.chips button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#FFFFFF}
+
+/* inputs: the tip is written in the serif */
+textarea,input[type="text"]{font-family:var(--font-display);font-weight:300;font-size:1.25rem;line-height:1.35;color:var(--ink);background:var(--field);border:1px solid var(--control-line);border-radius:0}
+textarea.tip{width:100%;min-height:150px;resize:vertical;padding:14px}
+.input{width:100%;padding:12px 14px}
+textarea.input{resize:vertical}
+select.input{appearance:none;-webkit-appearance:none;color:var(--ink);background-color:var(--field);border:1px solid var(--control-line);border-radius:0;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px;min-height:48px}
+input.line-input{width:100%;border:0;border-bottom:1px solid rgba(16,40,31,0.35);background:transparent;padding:8px 0;font-style:italic;font-size:1.0625rem}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-offset:1px}
+.field{display:flex;flex-direction:column;gap:8px}
+
+/* example list */
+.examples{display:flex;flex-direction:column}
+.examples button{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border:0;border-top:1px solid var(--hairline);background:transparent;text-align:left;font-family:var(--font-display);font-style:italic;font-weight:300;font-size:1.0625rem;line-height:1.3;color:var(--ink);cursor:pointer}
+.examples button:last-child{border-bottom:1px solid var(--hairline)}
+.examples .arr{font-style:normal;color:#B8912F;flex:none}
+
+/* welcome */
+.welcome-hero{height:430px;flex:none;padding:26px var(--gutter-r) 30px var(--gutter);display:flex;flex-direction:column;justify-content:flex-end;gap:16px}
+.hero-mark{font-family:var(--font-display);font-weight:300;font-size:var(--t-hero);line-height:.85;letter-spacing:-0.035em}
+.welcome-hero p{font-family:var(--font-display);font-weight:300;font-size:1.875rem;line-height:1.1;color:var(--on-green)}
+.welcome-body{padding:24px var(--gutter-r) 20px var(--gutter);display:flex;flex-direction:column;gap:18px;flex:1}
+.welcome-body > .disclaimer{margin-top:auto;padding-top:24px}
+
+/* the scale */
+.scale{position:relative}
+.scale .line{position:absolute;left:0;right:0}
+.scale .tick{position:absolute;width:1px}
+.scale .scale-labels{position:absolute;left:0;right:0;display:flex;justify-content:space-between}
+.scale .scale-labels .on{font-weight:500}
+.marker{position:absolute;border-radius:50%}
+/* evidence scale, on green */
+.ev{height:92px}
+.ev .line{top:40px;height:2px;background:var(--foil-line)}
+.ev.promo .line{opacity:.3}
+.ev .tick{top:34px;height:14px;background:var(--on-green-2)}
+.ev .scale-labels{top:60px}
+.ev .scale-labels .on{color:var(--on-green)}
+.ev .pin{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px}
+.ev .pin b{font-family:var(--font-mono);font-size:var(--t-micro);font-weight:500;color:var(--foil-text);white-space:nowrap}
+.ev .pin .marker{position:static;width:14px;height:14px;margin-top:6px;background:var(--foil-dot);box-shadow:0 0 0 4px rgba(233,204,116,0.22)}
+.ev .promo-note{position:absolute;right:0;top:78px}
+.ev.promo .scale-labels{opacity:.7}
+.settle .pin{transition:left 480ms cubic-bezier(.2,.8,.2,1)}
+/* checking sweep */
+.sweep{height:60px}
+.sweep .line{top:20px;height:2px;background:var(--foil-line);opacity:.5}
+.sweep .trail{position:absolute;top:18px;height:6px;width:33%}
+.sweep .marker{top:14px;width:14px;height:14px;margin-left:-7px;background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.22),0 0 18px rgba(243,226,154,0.6)}
+.sweep .scale-labels{top:38px;color:var(--on-green-3)}
+/* fit scale, on ivory */
+.fit{height:46px}
+.fit .line{top:12px;height:1px;background:var(--ink)}
+.fit .tick{left:50%;top:6px;height:12px;background:var(--stone)}
+.fit .marker{top:5px;width:14px;height:14px;transform:translateX(-50%);background:var(--foil-dot);box-shadow:0 0 0 2px var(--ivory),0 0 0 3px var(--green)}
+.fit .scale-labels{top:26px}
+.fit .scale-labels .on,.ex .scale-labels .on{color:var(--ink)}
+/* example scale on welcome */
+.ex{height:34px}
+.ex .line{top:7px;height:1px;background:var(--ink)}
+.ex .tick{left:50%;top:2px;height:11px;background:var(--stone)}
+.ex .marker{top:1px;margin-left:-7px;width:13px;height:13px;background:var(--foil-dot);box-shadow:0 0 0 2px var(--ivory),0 0 0 3px var(--green)}
+.ex .scale-labels{top:18px;font-size:var(--t-micro)}
+/* mini scale, My Proof */
+.mini{width:96px;height:12px;flex:none}
+.mini .line{top:5px;height:1px;background:var(--ink)}
+.mini.promo .line{opacity:.3}
+.mini .marker{top:0;margin-left:-6px;width:11px;height:11px;background:var(--foil-dot);box-shadow:0 0 0 1.5px var(--ivory),0 0 0 2.5px var(--green)}
+
+/* checking screen */
+.checking{position:fixed;inset:0;z-index:40;overflow:hidden}
+.checking .inner{position:relative;max-width:480px;height:100%;margin:0 auto}
+.drift{position:absolute;inset:0;font-family:var(--font-display);font-style:italic;font-weight:300;color:var(--drift);overflow:hidden}
+.drift span{position:absolute;white-space:nowrap;animation:drift 7s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(var(--dx),var(--dy))}}
+.checking header{position:absolute;left:var(--gutter);right:var(--gutter-r);top:20px;display:flex;justify-content:space-between;align-items:baseline}
+.checking .sweep{position:absolute;left:var(--gutter);right:var(--gutter-r);top:52%}
+.checking .status{position:absolute;left:var(--gutter);right:var(--gutter-r);top:calc(52% + 120px);display:flex;flex-direction:column;gap:8px}
+.checking .status p:first-child{font-family:var(--font-display);font-weight:300;font-size:2.5rem;line-height:1;color:var(--on-green)}
+.checking .status p + p{color:var(--on-green-2)}
+.checking .foot{position:absolute;left:var(--gutter);right:var(--gutter-r);bottom:calc(28px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.checking .foot .label{color:var(--on-green-3);text-align:right}
+
+/* verdict */
+.v-hero{padding:22px var(--gutter-r) 30px var(--gutter);display:flex;flex-direction:column;gap:18px}
+.v-hero header{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.v-hero .meta{text-align:right}
+.v-hero .quote{color:var(--on-green-quote)}
+.verdict{margin-top:6px;font-family:var(--font-display);font-weight:300;font-size:var(--t-verdict);line-height:.95;letter-spacing:-0.02em;color:var(--on-green)}
+.v-hero .ev{margin-top:18px}
+.v-body{padding:26px var(--gutter-r) 0 var(--gutter);display:flex;flex-direction:column;gap:22px}
+.flags{font-family:var(--font-mono);font-size:var(--t-label);font-weight:500;color:var(--notsup)}
+.v-sec{display:flex;flex-direction:column;gap:10px;padding-top:20px;border-top:1px solid var(--hairline)}
+.v-sec .fit{margin-top:4px}
+.v-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.v-actions .btn{flex:1}
+.v-links{display:flex;gap:18px;flex-wrap:wrap}
+.fade-up{animation:fadeup 420ms ease-out both}
+.fade-up.late{animation-delay:120ms}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* states */
+.state{display:flex;flex-direction:column;gap:14px;padding:26px var(--gutter-r) 24px var(--gutter)}
+.state .big988{font-family:var(--font-display);font-weight:300;font-size:var(--t-hero);line-height:.85;letter-spacing:-0.03em;color:var(--green);user-select:all}
+.state .row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+
+/* booth demo switch */
+.demo{display:flex;flex-direction:column;gap:8px}
+.demo .seg button{min-height:48px}
+
+/* My Proof */
+.summary{font-family:var(--font-display);font-weight:300;font-size:var(--t-h3);line-height:1.25}
+.summary b{font-weight:400;color:var(--green)}
+.filter{display:flex;gap:22px;border-bottom:1px solid var(--hairline)}
+.filter button{padding:10px 0;border:0;background:none;color:var(--stone);font-size:var(--t-control);font-weight:400;cursor:pointer}
+.filter button[aria-pressed="true"]{color:var(--ink);font-weight:500;box-shadow:inset 0 -2px 0 var(--foil-solid)}
+.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pitem{display:flex;flex-direction:column;gap:10px;padding:16px 0;border-bottom:1px solid var(--hairline)}
+.pitem .dateline{display:flex;justify-content:space-between;gap:12px}
+.pitem .claim{font-family:var(--font-display);font-weight:300;font-size:var(--t-quote);line-height:1.2}
+.pitem .res{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pitem .res .label-strong{font-family:var(--font-mono);font-size:var(--t-label)}
+.pitem .more{display:flex;flex-direction:column;gap:8px;padding-top:4px}
+.pitem .more label{color:var(--stone);font-weight:400}
+.empty{display:flex;flex-direction:column;gap:12px;padding:20px 0;border-bottom:1px solid var(--hairline)}
+
+/* profile and how it works */
+.sect{display:flex;flex-direction:column;gap:18px;padding-top:22px;border-top:1px solid var(--hairline)}
+.rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rank li{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--hairline)}
+.rank li:first-child{border-top:1px solid var(--hairline)}
+.rank .n{font-family:var(--font-display);font-weight:300;font-size:var(--t-h3);width:1.2em;color:var(--green);font-variant-numeric:tabular-nums}
+.rank .lbl{flex:1}
+.sqbtn{width:40px;height:40px;border:1px solid var(--control-line);border-radius:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink)}
+.sqbtn svg{width:16px;height:16px}
+.sqbtn[disabled]{opacity:.3;cursor:default}
+.prose{display:flex;flex-direction:column;gap:12px}
+.prose ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+.legend{display:flex;flex-direction:column}
+.legend .row{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:start;padding:12px 0;border-bottom:1px solid var(--hairline)}
+.legend .row:first-child{border-top:1px solid var(--hairline)}
+.legend .row .mini{margin-top:6px}
+.legend .row .label-strong{display:block}
+.legend .row .muted{display:block}
+
+/* bottom nav: text only */
+nav.tabs{position:sticky;bottom:0;z-index:20;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);border-top:1px solid var(--hairline);background:var(--ivory);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0 16px;border:0;background:none;font-size:var(--t-control);font-weight:400;color:var(--stone);cursor:pointer}
+nav.tabs button::before{content:"";width:6px;height:6px;border-radius:50%}
+nav.tabs button[aria-current="page"]{font-weight:500;color:var(--green)}
+nav.tabs button[aria-current="page"]::before{background:var(--foil-dot)}
+html.booth .no-booth{display:none!important}
+.booth-only{display:none!important}
+html.booth .booth-only{display:flex!important}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--green);color:#FFFFFF;padding:12px 18px;font-family:var(--font-mono);font-size:var(--t-control);box-shadow:inset 0 -2px 0 var(--foil-solid);max-width:calc(100% - 44px)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<main>
+
+  <!-- 1. Welcome (F-Welcome) -->
+  <section class="view" id="v-welcome" aria-labelledby="h-welcome">
+    <div class="on-green welcome-hero">
+      <h1 id="h-welcome" class="hero-mark foil-text">verity</h1>
+      <p>Your proof, not their posts.</p>
+    </div>
+    <div class="welcome-body">
+      <p class="lead">Paste a tip you saw about skincare, wellness or money. Verity checks it against the evidence, then checks if it fits you.</p>
+      <figure aria-label="Example: a tip placed on the evidence scale at Not supported" style="padding-top:14px;border-top:1px solid var(--hairline);display:flex;flex-direction:column;gap:10px">
+        <span class="quote" style="font-size:var(--t-lead)">“You don't need sunscreen on cloudy days.”</span>
+        <div class="scale ex" aria-hidden="true">
+          <div class="line"></div><span class="tick"></span>
+          <span class="marker" style="left:7%"></span>
+          <div class="scale-labels"><span class="on">Not supported</span><span>Mixed evidence</span><span>Well supported</span></div>
+        </div>
+        <figcaption class="label">Example check</figcaption>
+      </figure>
+      <div class="stack" style="gap:6px">
+        <button type="button" class="btn hero tall" data-go="check">Check a tip</button>
+        <button type="button" class="link center" data-go="profile">Set up my profile, 60 seconds</button>
+      </div>
+      <p class="disclaimer">Verity explains evidence. It isn't medical, legal or financial advice.</p>
+    </div>
+  </section>
+
+  <!-- 2. Profile (no mockup: built from the same components) -->
+  <section class="view" id="v-profile" hidden aria-labelledby="h-profile">
+    <header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button></header>
+    <form id="profileForm" class="pad stack" style="gap:22px" novalidate>
+      <div class="stack" style="gap:10px">
+        <h1 id="h-profile" class="h1">Your profile</h1>
+        <p class="muted">Every field is optional and takes about 60 seconds. Verity uses what you fill in to judge whether a tip fits you. It stays on this device.</p>
+      </div>
+      <div class="sect">
+        <h2 class="h3">Skin and beauty</h2>
+        <div class="field"><label class="label-strong" for="p_skin_type">Skin type</label>
+          <select class="input" id="p_skin_type"><option value="">Not set</option><option>Dry</option><option>Oily</option><option>Combination</option><option>Normal</option><option>Sensitive</option></select></div>
+        <fieldset><legend>Main concerns</legend><div class="chips" id="p_skin_concerns"></div></fieldset>
+        <div class="field"><label class="label-strong" for="p_skin_sensitivities">Known sensitivities</label><input class="input" type="text" id="p_skin_sensitivities" placeholder="For example fragrance or retinoids" autocomplete="off"></div>
+      </div>
+      <div class="sect">
+        <h2 class="h3">Wellness</h2>
+        <fieldset><legend>Goals</legend><div class="chips" id="p_wellness_goals"></div></fieldset>
+        <div class="field"><label class="label-strong" for="p_wellness_cautions">Anything to be careful with</label><textarea class="input" id="p_wellness_cautions" rows="2" placeholder="For example pregnancy or a medication"></textarea><span class="hint">Only sent with a check when you fill it in.</span></div>
+      </div>
+      <div class="sect">
+        <h2 class="h3">Money</h2>
+        <div class="field"><label class="label-strong" for="p_life_stage">Life stage</label>
+          <select class="input" id="p_life_stage"><option value="">Not set</option><option>Student</option><option>Early career</option><option>Mid career</option><option>Parent or caregiver</option><option>Other</option></select></div>
+        <fieldset><legend>High-interest debt, like a credit card balance</legend><div class="seg" id="p_high_interest_debt"></div></fieldset>
+        <fieldset><legend>Emergency savings</legend><div class="seg" id="p_emergency_savings"></div></fieldset>
+        <div class="field"><label class="label-strong" for="p_money_goal">Main money goal</label>
+          <select class="input" id="p_money_goal"><option value="">Not set</option><option>Pay off debt</option><option>Build savings</option><option>Start investing</option><option>Buy a home</option><option>Spend less</option></select></div>
+      </div>
+      <div class="sect">
+        <h2 class="h3">What matters most</h2>
+        <p class="hint" id="rankHint">Move them into your order. Top matters most.</p>
+        <ol class="rank" id="rankList"></ol>
+      </div>
+      <button class="btn tall" type="submit">Save profile</button>
+      <p class="hint" id="storageNote" hidden>Saving is off in this browser, so your profile lasts until you close the page.</p>
+      <div class="sect">
+        <h2 class="h3">Your data</h2>
+        <p class="muted">Your profile and My Proof live on this device only. Clearing removes both.</p>
+        <div><button class="link" id="clearBtn" type="button">Clear my data</button></div>
+      </div>
+    </form>
+  </section>
+
+  <!-- 3. Check a tip (F-Check) -->
+  <section class="view" id="v-check" hidden aria-labelledby="h-check">
+    <header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button><span class="label booth-only">Booth</span></header>
+    <form id="checkForm" class="pad stack" style="gap:22px;flex:1" novalidate>
+      <h1 id="h-check" class="h1"><span class="no-booth">Check a tip</span><span class="booth-only">Paste a tip you've seen this week.</span></h1>
+      <div class="demo booth-only" role="group" aria-labelledby="demoLab1">
+        <span class="label-strong" id="demoLab1">Demo profile</span>
+        <div class="seg demo-seg"></div>
+      </div>
+      <div class="field">
+        <label class="label-strong" for="tip">Paste the tip or caption.</label>
+        <textarea class="tip" id="tip" rows="5" maxlength="2000" placeholder="For example: You don't need sunscreen on cloudy days."></textarea>
+      </div>
+      <div class="stack">
+        <span class="label" style="padding-bottom:6px">Or try one of these</span>
+        <div class="examples" id="examples"></div>
+      </div>
+      <fieldset>
+        <legend>Category <span class="label" id="catState"></span></legend>
+        <div class="seg" id="catSeg"></div>
+      </fieldset>
+      <fieldset><legend>Where did you see it?</legend><div class="chips" id="srcSeg"></div></fieldset>
+      <fieldset><legend>Was it sponsored?</legend><div class="seg" id="sponSeg"></div></fieldset>
+      <button class="btn tall" type="submit" id="checkBtn">Check this tip</button>
+      <p class="flags" id="checkErr" role="alert" hidden></p>
+      <p class="disclaimer">Verity explains evidence. It isn't medical, legal or financial advice.</p>
+    </form>
+  </section>
+
+  <!-- 4. Verdict (F-Verdict); checking (F-Checking) is drawn as an overlay -->
+  <section class="view" id="v-verdict" hidden aria-labelledby="h-verdict">
+    <div id="verdictOut" aria-live="polite" class="stack" style="flex:1"></div>
+  </section>
+
+  <!-- 5. My Proof (F-Proof) -->
+  <section class="view" id="v-proof" hidden aria-labelledby="h-proof">
+    <header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button></header>
+    <div class="pad stack" style="gap:18px">
+      <h1 id="h-proof" class="h1">My Proof</h1>
+      <p class="summary" id="proofSummary"></p>
+      <div class="filter" id="proofFilter" role="group" aria-label="Filter by category"></div>
+      <ul class="plist" id="proofList"></ul>
+      <p class="disclaimer">Saved on this device only.</p>
+    </div>
+  </section>
+
+  <!-- 6. How it works (no mockup) -->
+  <section class="view" id="v-how" hidden aria-labelledby="h-how">
+    <header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button></header>
+    <div class="pad stack" style="gap:22px">
+      <div class="prose">
+        <h1 id="h-how" class="h1">How Verity works</h1>
+        <p>Fact-checkers ask whether a tip is true. Verity also asks whether it's true for you, and shows its reasoning every time.</p>
+      </div>
+      <div class="sect prose">
+        <h2 class="h3">What it checks</h2>
+        <ul>
+          <li>What the tip claims, in one line.</li>
+          <li>How well mainstream expert guidance supports it: dermatology, medicine, public health and basic consumer finance.</li>
+          <li>Red flags, like guaranteed results, urgency or fear.</li>
+          <li>Whether it fits the profile you filled in, and which fields it used.</li>
+          <li>A safer next step, and when to ask a professional.</li>
+        </ul>
+      </div>
+      <div class="sect prose">
+        <h2 class="h3">What it doesn't do</h2>
+        <ul>
+          <li>Diagnose a condition or suggest a dose.</li>
+          <li>Recommend a brand, product, stock, coin or fund.</li>
+          <li>Give personal investment, tax or legal advice. It explains general principles.</li>
+          <li>Cite live studies. It names the kind of authority behind a verdict instead, so it never makes up a source.</li>
+          <li>Judge creators. It critiques the claim, never the person.</li>
+        </ul>
+      </div>
+      <div class="sect">
+        <h2 class="h3">What the labels mean</h2>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="sect prose">
+        <h2 class="h3">Where your data lives</h2>
+        <p>Your profile and My Proof stay in this browser on this device. When you check a tip, the tip and only the profile fields you filled in are sent to Claude to write the verdict. Verity has no analytics and no tracking.</p>
+        <div><button class="link" type="button" id="clearBtn2">Clear my data</button></div>
+      </div>
+      <div class="sect prose">
+        <h2 class="h3">Its limits</h2>
+        <p>Verity uses AI, and AI can be wrong. Evidence changes over time. "The evidence is mixed" is a complete answer. For symptoms, medications, pregnancy, mental health or large debts, talk to a professional.</p>
+        <p>If you're going through something hard right now, you can call or text 988, the Suicide and Crisis Lifeline in the US.</p>
+        <p class="disclaimer">Verity explains evidence. It isn't medical, legal or financial advice.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="tabs" id="tabs" aria-label="Main">
+  <button type="button" data-go="check" data-tab="check">Check</button>
+  <button type="button" data-go="proof" data-tab="proof">My Proof</button>
+  <button type="button" data-go="profile" data-tab="profile" class="no-booth">Profile</button>
+  <button type="button" data-go="how" data-tab="how">How it works</button>
+</nav>
+</div>
+
+<div class="checking on-green" id="checking" hidden></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- constants ---------- */
+const SOFT_HINT_MS = 10000, HARD_TIMEOUT_MS = 35000;
+const SETTLE_MS = 480;
+const STORE_KEY = "verity.v1";
+
+const EVIDENCE = {
+  well_supported:{label:"Well supported", pos:93}, mixed:{label:"Mixed evidence", pos:50},
+  not_supported:{label:"Not supported", pos:7}, promotional:{label:"Promotional", pos:100}
+};
+const FIT = {
+  for_you:{label:"For you", pos:93}, maybe:{label:"Maybe for you", pos:50},
+  not_for_you:{label:"Not for you", pos:7}, need_profile:{label:"Add your profile to check fit"}
+};
+const CONF = {high:"High", medium:"Medium", low:"Low"};
+const FLAGS = {
+  guaranteed_results:"guaranteed results", urgency:"urgency", undisclosed_sponsorship:"possible undisclosed ad",
+  absolute_language:"absolute language", miracle_claim:"miracle claim", unrealistic_income:"unrealistic income",
+  fear_based:"fear-based", one_size_fits_all:"one size fits all"
+};
+const CATS = {beauty:"Beauty", wellness:"Wellness", money:"Money", other:"Other"};
+const BASIS_HINT = {beauty:"dermatology guidance", wellness:"medical and public health guidance", money:"basic consumer finance", other:"expert guidance"};
+const FIELD_LABELS = {
+  skin_type:"skin type", skin_concerns:"skin concerns", skin_sensitivities:"sensitivities",
+  wellness_goals:"wellness goals", wellness_cautions:"things to be careful with",
+  life_stage:"life stage", high_interest_debt:"high-interest debt", emergency_savings:"emergency savings",
+  money_goal:"money goal", priorities:"what matters most"
+};
+const OPTIONS = {
+  skin_concerns:["Acne","Dark spots","Dryness","Redness","Fine lines","Texture"],
+  wellness_goals:["Sleep better","More energy","Get stronger","Less stress","Eat better"],
+  high_interest_debt:["Yes","No","Prefer not to say"],
+  emergency_savings:["Yes","No","Prefer not to say"]
+};
+const PRIORITY_ITEMS = ["Beauty","Wellness","Money","Time"];
+const SOURCES = ["TikTok","Instagram","YouTube","A friend","Other"];
+const SPONSORED = ["Yes","No","Not sure"];
+
+const DEMO_PROFILES = {
+  none:{label:"No profile", profile:null},
+  debt:{label:"Maya, has card debt", profile:{skin_type:"Sensitive", skin_sensitivities:"fragrance", wellness_goals:["Sleep better"], life_stage:"Early career", high_interest_debt:"Yes", emergency_savings:"No", money_goal:"Pay off debt"}},
+  nodebt:{label:"Maya, no debt", profile:{skin_type:"Sensitive", skin_sensitivities:"fragrance", wellness_goals:["Sleep better"], life_stage:"Early career", high_interest_debt:"No", emergency_savings:"Yes", money_goal:"Start investing"}}
+};
+
+// Test claims 1, 14 and 17 (the full set lives in lib/verity.js). Short text is what the list shows.
+const EXAMPLES = [
+  {short:"Chemicals in sunscreen are worse for you than a sunburn.", text:"Chemicals in sunscreen are worse for you than a sunburn."},
+  {short:"This coin is guaranteed to 10x by next month.", text:"This coin is guaranteed to 10x by next month. Get in before it's too late."},
+  {short:"Pay off credit card debt before investing extra money.", text:"Pay off high-interest credit card debt before investing extra money."}
+];
+
+const ICON = {
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'
+};
+const esc = (s) => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const reduceMotion = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+const lc = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+
+/* ---------- storage ---------- */
+let storageOK = true;
+function loadStore(){
+  try{ const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ storageOK = false; return null; }
+}
+function saveStore(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({profile:S.profile, priorities:S.priorities, proof:S.proof, checks:S.checks})); }
+  catch(e){ storageOK = false; $("#storageNote").hidden = false; }
+}
+function clearStore(){ try{ localStorage.removeItem(STORE_KEY); }catch(e){} }
+
+/* ---------- state ---------- */
+const stored = loadStore() || {};
+const S = {
+  view:"welcome",
+  booth:false,
+  profile: stored.profile && typeof stored.profile === "object" ? stored.profile : {},
+  priorities: Array.isArray(stored.priorities) ? stored.priorities : null,
+  proof: Array.isArray(stored.proof) ? stored.proof : [],
+  checks: Number(stored.checks)||0,
+  demo:"debt",
+  draft:{tip:"", source:"", sponsored:"", category:"", catOverride:false},
+  last:null,      // {req, data, savedId, n}
+  ctl:null,
+  filter:"all",
+  sweepPos:50
+};
+try{ localStorage.setItem("verity.probe","1"); localStorage.removeItem("verity.probe"); }catch(e){ storageOK = false; }
+
+/* ---------- category detection ---------- */
+const KW = {
+  beauty:/\b(skin|sunscreen|spf|acne|pimple|zit|moisturi[sz]|serum|retin|hair|makeup|glow|pore|wrinkle|tallow|dark spot|lemon|toothpaste|cleanser|lip|nail|skincare|tan|exfoli|toner|derm|collagen|niacinamide|vitamin c)/gi,
+  wellness:/\b(sleep|steps|walk|detox|tea|gut|plunge|anxiety|workout|strength|protein|diet|supplement|mouth|fasting|cardio|stress|liver|toxin|calorie|weight|exercise|gym|cortisol|hydrat|meditat|vitamin d|magnesium)/gi,
+  money:/(\$|\b(coin|crypto|invest|debt|credit|score|rent|mortgage|budget|saving|emergency fund|stock|income|course|pay later|loan|401|roth|money|10x|interest|fund|bank|side hustle|passive)\b)/gi
+};
+function detectCategory(t){
+  let best = "", bestN = 0;
+  for (const k of ["beauty","wellness","money"]){ const n = (t.match(KW[k])||[]).length; if (n > bestN){ best = k; bestN = n; } }
+  return best;
+}
+
+/* ---------- profile for a request ---------- */
+function profileForRequest(){
+  if (S.booth){ return DEMO_PROFILES[S.demo].profile ? {...DEMO_PROFILES[S.demo].profile} : null; }
+  return compactProfile(S.profile, S.priorities);
+}
+function compactProfile(p, pri){
+  const out = {};
+  for (const k of Object.keys(FIELD_LABELS)){
+    if (k === "priorities") continue;
+    const v = p && p[k];
+    if (v == null) continue;
+    if (Array.isArray(v)){ if (v.length) out[k] = v.slice(); }
+    else { const s = String(v).trim(); if (s && s !== "Prefer not to say") out[k] = s; }
+  }
+  if (pri && pri.length) out.priorities = pri.slice();
+  return Object.keys(out).length ? out : null;
+}
+
+/* ---------- server call ---------- */
+// Same crisis screen as the server, so the 988 screen shows even offline.
+const CRISIS_RE = /\b(suicid|kill (my|your)self|self[- ]?harm|end (my|it all)|want to die|cutting myself|hurt myself|no reason to live)/i;
+
+async function askVerity(req, opts){
+  opts = opts || {};
+  let res;
+  try{
+    res = await fetch("/api/check", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(req), signal:opts.signal});
+  }catch(e){ throw {code: e && e.name === "AbortError" ? "cancelled" : "network"}; }
+  let body = null;
+  try{ body = await res.json(); }catch(e){ if (opts.signal && opts.signal.aborted) throw {code:"cancelled"}; }
+  if (!body) throw {code: res.status === 429 ? "rate_limited" : "bad_output"};
+  if (body.error) throw {code: body.error};
+  if (body.status !== "ok" && body.status !== "crisis" && body.status !== "nothing_to_check") throw {code:"bad_output"};
+  if (body.status === "ok" && !(body.evidence && EVIDENCE[body.evidence.verdict] && body.fit && FIT[body.fit.verdict])) throw {code:"bad_output"};
+  return {data: body};
+}
+
+/* ---------- navigation ---------- */
+const VIEWS = ["welcome","profile","check","verdict","proof","how"];
+function go(v){
+  if (S.booth && (v === "profile" || v === "welcome")) v = "check";
+  S.view = v;
+  for (const id of VIEWS) $("#v-"+id).hidden = id !== v;
+  $("#tabs").hidden = v === "welcome";
+  const tab = v === "verdict" ? "check" : v;
+  $$("#tabs button").forEach(b => { if (b.dataset.tab === tab) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  if (v === "proof") renderProof();
+  if (v === "profile") renderProfile();
+  window.scrollTo(0,0);
+  const h = $("#v-"+v+" h1"); if (h){ h.setAttribute("tabindex","-1"); try{ h.focus({preventScroll:true}); }catch(e){} }
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-go]"); if (b){ e.preventDefault(); go(b.dataset.go); return; }
+  if (e.target.closest("[data-home]")) go(S.booth ? "check" : "welcome");
+});
+
+/* ---------- small UI helpers ---------- */
+function segment(container, items, current, onPick){
+  container.innerHTML = "";
+  for (const it of items){
+    const val = typeof it === "string" ? it : it.value, lab = typeof it === "string" ? it : it.label;
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = lab;
+    const on = Array.isArray(current) ? current.includes(val) : current === val;
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.addEventListener("click", () => onPick(val, b));
+    container.appendChild(b);
+  }
+}
+let toastT;
+function toast(msg){
+  let t = $(".toast"); if (!t){ t = document.createElement("div"); t.className = "toast"; t.setAttribute("role","status"); document.body.appendChild(t); }
+  t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2200);
+}
+async function copyText(text, fallbackEl){
+  try{ await navigator.clipboard.writeText(text); toast("Copied"); return true; }
+  catch(e){
+    if (fallbackEl){ fallbackEl.hidden = false; fallbackEl.value = text; fallbackEl.focus(); fallbackEl.select(); toast("Select all and copy"); }
+    return false;
+  }
+}
+
+/* ---------- scales ---------- */
+const EV_LABELS = ["not_supported","mixed","well_supported"];
+function evidenceScale(verdict, startPos){
+  const promo = verdict === "promotional";
+  const pos = EVIDENCE[verdict].pos;
+  return '<figure class="scale ev'+(promo?" promo":"")+'" role="img" aria-label="Evidence: '+esc(lc(EVIDENCE[verdict].label))+'">'+
+    '<div class="line"></div><span class="tick" style="left:0"></span><span class="tick" style="left:50%"></span><span class="tick" style="right:0"></span>'+
+    '<div class="pin" data-pos="'+pos+'" style="left:'+(startPos == null ? pos : startPos)+'%"><b>This tip</b><span class="marker"></span></div>'+
+    '<div class="scale-labels" aria-hidden="true">'+EV_LABELS.map(k => '<span'+(k===verdict?' class="on"':'')+'>'+EVIDENCE[k].label+'</span>').join("")+'</div>'+
+    (promo ? '<span class="promo-note label">Mainly selling something.</span>' : '')+
+  '</figure>';
+}
+function fitScale(verdict){
+  return '<figure class="scale fit" role="img" aria-label="Fit: '+esc(lc(FIT[verdict].label))+'">'+
+    '<div class="line"></div><span class="tick"></span><span class="marker" style="left:'+FIT[verdict].pos+'%"></span>'+
+    '<div class="scale-labels" aria-hidden="true">'+["not_for_you","maybe","for_you"].map(k => '<span'+(k===verdict?' class="on"':'')+'>'+FIT[k].label+'</span>').join("")+'</div>'+
+  '</figure>';
+}
+function miniScale(verdict){
+  return '<div class="scale mini'+(verdict==="promotional"?" promo":"")+'" aria-hidden="true"><div class="line"></div><span class="marker" style="left:'+EVIDENCE[verdict].pos+'%"></span></div>';
+}
+
+/* ---------- profile ---------- */
+function renderProfile(){
+  const p = S.profile;
+  $("#p_skin_type").value = p.skin_type || "";
+  $("#p_skin_sensitivities").value = p.skin_sensitivities || "";
+  $("#p_wellness_cautions").value = p.wellness_cautions || "";
+  $("#p_life_stage").value = p.life_stage || "";
+  $("#p_money_goal").value = p.money_goal || "";
+  for (const key of ["skin_concerns","wellness_goals"]){
+    const el = $("#p_"+key);
+    const draw = () => segment(el, OPTIONS[key], p[key]||[], (v) => {
+      const arr = new Set(p[key]||[]); arr.has(v) ? arr.delete(v) : arr.add(v); p[key] = [...arr]; draw();
+    });
+    draw();
+  }
+  for (const key of ["high_interest_debt","emergency_savings"]){
+    const el = $("#p_"+key);
+    const draw = () => segment(el, OPTIONS[key], p[key]||"", (v) => { p[key] = p[key] === v ? "" : v; draw(); });
+    draw();
+  }
+  renderRank();
+  $("#storageNote").hidden = storageOK;
+}
+function renderRank(){
+  const list = $("#rankList");
+  const order = S.priorities || PRIORITY_ITEMS.slice();
+  $("#rankHint").textContent = S.priorities ? "Your order. Top matters most." : "Not ranked yet. Move them into your order. Top matters most.";
+  list.innerHTML = "";
+  order.forEach((name, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = '<span class="n">'+(i+1)+'</span><span class="lbl">'+esc(name)+'</span>'+
+      '<button type="button" class="sqbtn" aria-label="Move '+esc(name)+' up" '+(i===0?"disabled":"")+'>'+ICON.up+'</button>'+
+      '<button type="button" class="sqbtn" aria-label="Move '+esc(name)+' down" '+(i===order.length-1?"disabled":"")+'>'+ICON.down+'</button>';
+    const [upB, downB] = li.querySelectorAll("button");
+    upB.addEventListener("click", () => move(i, -1));
+    downB.addEventListener("click", () => move(i, 1));
+    list.appendChild(li);
+  });
+  function move(i, d){
+    const o = (S.priorities || PRIORITY_ITEMS.slice()).slice();
+    const j = i + d; if (j < 0 || j >= o.length) return;
+    [o[i], o[j]] = [o[j], o[i]]; S.priorities = o; renderRank();
+    const btn = $$("#rankList li")[j].querySelectorAll("button")[d < 0 ? 0 : 1]; if (btn && !btn.disabled) btn.focus();
+  }
+}
+$("#profileForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const p = S.profile;
+  p.skin_type = $("#p_skin_type").value;
+  p.skin_sensitivities = $("#p_skin_sensitivities").value.trim();
+  p.wellness_cautions = $("#p_wellness_cautions").value.trim();
+  p.life_stage = $("#p_life_stage").value;
+  p.money_goal = $("#p_money_goal").value;
+  saveStore();
+  toast(storageOK ? "Profile saved on this device" : "Profile kept until you close the page");
+  go("check");
+});
+function wireClear(btn){
+  let armed = false, t;
+  btn.addEventListener("click", () => {
+    if (!armed){ armed = true; btn.textContent = "Tap again to clear everything"; t = setTimeout(() => { armed = false; btn.textContent = "Clear my data"; }, 4000); return; }
+    clearTimeout(t); armed = false; btn.textContent = "Clear my data";
+    clearStore(); S.profile = {}; S.priorities = null; S.proof = []; S.checks = 0; S.last = null;
+    renderProfile(); toast("Your data is cleared");
+  });
+}
+wireClear($("#clearBtn")); wireClear($("#clearBtn2"));
+
+/* ---------- check ---------- */
+function renderCheckControls(){
+  const d = S.draft;
+  segment($("#catSeg"), ["beauty","wellness","money"].map(v => ({value:v,label:CATS[v]})), d.category, (v) => { d.category = v; d.catOverride = true; renderCheckControls(); });
+  $("#catState").textContent = d.catOverride ? "· you picked" : (d.category ? "· detected" : "· detected as you type");
+  segment($("#srcSeg"), SOURCES, d.source, (v) => { d.source = d.source === v ? "" : v; renderCheckControls(); });
+  segment($("#sponSeg"), SPONSORED, d.sponsored, (v) => { d.sponsored = d.sponsored === v ? "" : v; renderCheckControls(); });
+}
+function renderExamples(){
+  const box = $("#examples"); box.innerHTML = "";
+  for (const ex of EXAMPLES){
+    const b = document.createElement("button"); b.type = "button";
+    b.innerHTML = '<span>“'+esc(ex.short)+'”</span><span class="arr" aria-hidden="true">→</span>';
+    b.setAttribute("aria-label", "Use example: " + ex.text);
+    b.addEventListener("click", () => { $("#tip").value = ex.text; onTipInput(); $("#tip").focus(); });
+    box.appendChild(b);
+  }
+}
+function renderDemo(){
+  $$(".demo-seg").forEach(el => segment(el, Object.keys(DEMO_PROFILES).map(k => ({value:k,label:DEMO_PROFILES[k].label})), S.demo, (v) => {
+    if (S.demo === v) return;
+    S.demo = v; renderDemo();
+    if (S.view === "verdict" && S.last && S.last.req) runCheck({...S.last.req, profile: profileForRequest()}, true);
+  }));
+}
+function onTipInput(){
+  const d = S.draft; d.tip = $("#tip").value;
+  if (!d.catOverride) d.category = detectCategory(d.tip);
+  renderCheckControls();
+  $("#checkErr").hidden = true;
+}
+$("#tip").addEventListener("input", onTipInput);
+$("#checkForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const tip = $("#tip").value.trim();
+  if (tip.length < 3){ const er = $("#checkErr"); er.textContent = "Paste a tip first, or tap an example."; er.hidden = false; $("#tip").focus(); return; }
+  const d = S.draft;
+  runCheck({tip, source:d.source, sponsored:d.sponsored, category:d.category, catOverride:d.catOverride, profile: profileForRequest()}, false);
+});
+
+/* ---------- checking screen (F-Checking) ---------- */
+let sweepRAF = 0;
+function showChecking(req, n){
+  const el = $("#checking");
+  const words = req.tip.split(/\s+/).filter(Boolean).slice(0, 14);
+  const lines = []; for (let i = 0; i < words.length; i += 2) lines.push(words.slice(i, i+2).join(" "));
+  const drift = lines.slice(0, 7).map((w, i) => {
+    const left = [6, 54, 15, 59, 28, 4, 46][i], top = 120 + i * 50 + (i % 2) * 10, size = [26,18,20,24,18,22,19][i];
+    const dx = ((i % 3) - 1) * 14, dy = (i % 2 ? -10 : 10);
+    return '<span style="left:'+left+'%;top:'+top+'px;font-size:'+size+'px;--dx:'+dx+'px;--dy:'+dy+'px;animation-delay:-'+(i*900)+'ms">'+esc(w)+'</span>';
+  }).join("");
+  const basis = BASIS_HINT[req.category] || "expert guidance";
+  el.innerHTML = '<div class="inner">'+
+    '<div class="drift" aria-hidden="true">'+drift+'</div>'+
+    '<header><span class="mark-green" aria-hidden="true">verity</span><span class="meta">Check Nº '+n+'</span></header>'+
+    '<div class="scale sweep" aria-hidden="true"><div class="line"></div><div class="trail" id="sweepTrail"></div><span class="marker" id="sweepMarker" style="left:50%"></span>'+
+      '<div class="scale-labels"><span>Not supported</span><span>Mixed evidence</span><span>Well supported</span></div></div>'+
+    '<div class="status" role="status"><p id="loadMsg">Checking the evidence</p><p id="loadSub">Comparing this tip with '+esc(basis)+(req.profile ? ' and your profile.' : '.')+'</p></div>'+
+    '<div class="foot"><button type="button" class="link" id="stopBtn">Stop</button><span class="label">The marker sweeps until the verdict lands</span></div>'+
+  '</div>';
+  el.hidden = false;
+  document.body.style.overflow = "hidden";
+  startSweep();
+}
+function startSweep(){
+  cancelAnimationFrame(sweepRAF);
+  S.sweepPos = 50;
+  if (reduceMotion()) return;
+  const m = $("#sweepMarker"), tr = $("#sweepTrail"); const t0 = performance.now();
+  const step = (t) => {
+    const ph = (t - t0) / 1100;
+    const pos = 50 - 43 * Math.cos(ph);
+    const dir = Math.sin(ph) >= 0 ? 1 : -1;
+    S.sweepPos = pos;
+    m.style.left = pos + "%";
+    if (dir > 0){ tr.style.left = (pos - 33) + "%"; tr.style.background = "linear-gradient(90deg, rgba(243,226,154,0), rgba(243,226,154,0.55))"; }
+    else { tr.style.left = pos + "%"; tr.style.background = "linear-gradient(270deg, rgba(243,226,154,0), rgba(243,226,154,0.55))"; }
+    sweepRAF = requestAnimationFrame(step);
+  };
+  sweepRAF = requestAnimationFrame(step);
+}
+function hideChecking(){
+  cancelAnimationFrame(sweepRAF);
+  const el = $("#checking"); el.hidden = true; el.innerHTML = "";
+  document.body.style.overflow = "";
+}
+
+/* ---------- run a check ---------- */
+async function runCheck(req, isRecheck){
+  if (S.ctl) S.ctl.abort();
+  const ctl = new AbortController(); S.ctl = ctl;
+  const n = S.checks + 1;
+  S.last = {req, data:null, savedId:null, n};
+  if (S.view !== "verdict") go("verdict");
+  const out = $("#verdictOut");
+  if (CRISIS_RE.test(req.tip)){ hideChecking(); out.innerHTML = crisisView(); return; }
+  showChecking(req, n);
+  $("#stopBtn").addEventListener("click", () => ctl.abort());
+  const soft = setTimeout(() => { const m = $("#loadSub"); if (m) m.textContent = "Still checking. This one is taking longer than usual."; }, SOFT_HINT_MS);
+  let timedOut = false;
+  const hard = setTimeout(() => { timedOut = true; ctl.abort(); }, HARD_TIMEOUT_MS);
+  try{
+    const {data} = await askVerity(req, {signal: ctl.signal});
+    if (S.ctl !== ctl) return;
+    S.checks = n; saveStore();
+    S.last.data = data;
+    const from = S.sweepPos;
+    hideChecking();
+    if (data.status === "crisis"){ out.innerHTML = crisisView(); return; }
+    if (data.status === "nothing_to_check"){ out.innerHTML = nothingView(); wireStateButtons(); return; }
+    out.innerHTML = cardView(data, req, n, reduceMotion() ? null : from);
+    wireCard(data, req);
+    settle();
+  }catch(e){
+    if (S.ctl !== ctl) return;
+    hideChecking();
+    if (e && e.code === "cancelled" && !timedOut){ go("check"); return; }
+    out.innerHTML = errorView(timedOut ? "timeout" : e && e.code);
+    wireStateButtons();
+  }finally{ clearTimeout(soft); clearTimeout(hard); }
+}
+function settle(){
+  const pin = $("#verdictOut .ev .pin"); if (!pin) return;
+  const target = pin.dataset.pos + "%";
+  if (reduceMotion()){ pin.style.left = target; return; }
+  pin.parentElement.classList.add("settle");
+  requestAnimationFrame(() => requestAnimationFrame(() => { pin.style.left = target; }));
+  setTimeout(() => pin.parentElement.classList.remove("settle"), SETTLE_MS + 50);
+}
+
+/* ---------- verdict (F-Verdict) ---------- */
+const VERDICT_WORD = {well_supported:"Well supported.", mixed:"Mixed evidence.", not_supported:"Not supported.", promotional:"Promotional."};
+const FIT_WORD = {for_you:"For you.", maybe:"Maybe for you.", not_for_you:"Not for you.", need_profile:"Add your profile to check fit."};
+function cardView(d, req, n, from){
+  const used = d.fit.profile_fields_used.map(k => FIELD_LABELS[k] || k);
+  const meta = ["Nº "+n, req.source || "", CATS[d.category] || "Other"].filter(Boolean).join(" · ");
+  const metaLine = [d.evidence.basis ? "Basis: "+esc(d.evidence.basis) : "", esc(CONF[d.confidence])+" confidence",
+    d.red_flags.length ? '<span class="flags">Red flags: '+d.red_flags.map(f => esc(FLAGS[f])).join(", ")+'</span>' : ""].filter(Boolean).join(" · ");
+  let h = '<article class="stack" aria-label="Verdict">';
+  h += '<section class="on-green v-hero">'+
+    '<header><button type="button" class="mark-green" data-home aria-label="Verity home">verity</button><span class="meta">'+esc(meta)+'</span></header>'+
+    '<p class="quote">'+esc(d.claim_summary)+'</p>'+
+    '<h1 id="h-verdict" class="verdict fade-up">'+VERDICT_WORD[d.evidence.verdict]+'</h1>'+
+    evidenceScale(d.evidence.verdict, from)+
+  '</section>';
+  h += '<section class="v-body fade-up late">';
+  if (S.booth){
+    h += '<div class="demo" role="group" aria-labelledby="demoLab2"><span class="label-strong" id="demoLab2">Demo profile</span><div class="seg demo-seg"></div></div>';
+  }
+  h += '<div class="stack" style="gap:8px"><p class="lead">'+esc(d.evidence.why)+'</p><p class="meta">'+metaLine+'</p></div>';
+  h += '<div class="v-sec">';
+  if (d.fit.verdict === "need_profile"){
+    h += '<h2 class="h2">Add your profile to check fit.</h2>';
+    if (S.booth) h += '<p>Pick a demo profile above to see whether this fits.</p>';
+    else if (req.profile) h += '<p>Your profile doesn\'t cover what this tip depends on yet.</p><div><button type="button" class="link" data-go="profile">Add to my profile</button></div>';
+    else h += '<p>Fill in a few profile fields and Verity can tell you whether this fits you.</p><div><button type="button" class="link" data-go="profile">Set up my profile</button></div>';
+  } else {
+    h += '<h2 class="h2">'+FIT_WORD[d.fit.verdict]+'</h2>'+fitScale(d.fit.verdict);
+    if (d.fit.reason) h += '<p>'+esc(d.fit.reason)+'</p>';
+    h += '<p class="meta">Based on: '+(used.length ? esc(used.join(", ")) : "the evidence, since no profile field changed the answer")+'</p>';
+  }
+  h += '</div>';
+  h += '<div class="v-sec" style="gap:6px"><h2 class="h3">Safer next step</h2><p>'+esc(d.next_step)+'</p></div>';
+  if (d.ask_a_pro.needed){
+    const who = d.ask_a_pro.who !== "none" ? d.ask_a_pro.who : "a professional";
+    const article = who === "a professional" ? who : (/^[aeiou]/i.test(who) ? "an "+who : "a "+who);
+    h += '<div class="v-sec" style="gap:6px"><h2 class="h3">When to ask a pro</h2><p>Talk to '+esc(article)+'. '+esc(d.ask_a_pro.why)+'</p></div>';
+  }
+  h += '<div class="v-actions"><button type="button" class="btn" id="saveBtn">Save to My Proof</button>'+
+       '<button type="button" class="link" id="againBtn">Check another</button></div>';
+  h += '<textarea id="copyFallback" class="input" rows="6" hidden aria-label="Verdict text to copy"></textarea>';
+  h += '<div class="v-links"><button type="button" class="link small" id="copyBtn">Copy card</button><button type="button" class="link small" data-go="how">How Verity decides</button></div>';
+  h += '<p class="disclaimer" style="margin-bottom:24px">Verity explains evidence. It isn\'t medical, legal or financial advice.</p>';
+  h += '</section></article>';
+  return h;
+}
+function cardText(d){
+  const lines = ["verity. tip check", "", "Claim: "+d.claim_summary,
+    "Evidence: "+EVIDENCE[d.evidence.verdict].label+". "+d.evidence.why];
+  if (d.red_flags.length) lines.push("Red flags: "+d.red_flags.map(f => FLAGS[f]).join(", "));
+  lines.push("Fit: "+FIT[d.fit.verdict].label+(d.fit.verdict!=="need_profile" && d.fit.reason ? ". "+d.fit.reason : ""));
+  lines.push("Safer next step: "+d.next_step);
+  if (d.ask_a_pro.needed) lines.push("Ask a pro: "+d.ask_a_pro.who+". "+d.ask_a_pro.why);
+  lines.push("Confidence: "+CONF[d.confidence], "", "Verity explains evidence. It isn't medical, legal or financial advice.");
+  return lines.join("\n");
+}
+function wireCard(d, req){
+  renderDemo();
+  const save = $("#saveBtn");
+  const markSaved = () => { save.textContent = "Saved to My Proof"; save.disabled = true; };
+  if (S.last.savedId) markSaved();
+  save.addEventListener("click", () => {
+    const id = "p" + Date.now().toString(36);
+    S.proof.unshift({id, at:Date.now(), tip:req.tip, source:req.source||"", category:d.category, claim:d.claim_summary,
+      evidence:d.evidence.verdict, fit:d.fit.verdict, confidence:d.confidence, tried:"not_yet", outcome:"", note:""});
+    S.last.savedId = id; saveStore(); markSaved();
+    toast(storageOK ? "Saved to My Proof" : "Saved until you close the page");
+  });
+  $("#againBtn").addEventListener("click", () => { $("#tip").value = ""; S.draft = {tip:"",source:"",sponsored:"",category:"",catOverride:false}; renderCheckControls(); go("check"); $("#tip").focus(); });
+  $("#copyBtn").addEventListener("click", () => copyText(cardText(d), $("#copyFallback")));
+}
+
+/* ---------- states ---------- */
+const stateHead = '<header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button></header>';
+function errorView(code){
+  let title = "Couldn't check this one. Try rephrasing it.", body = "Something went wrong reading the answer. You can try again, or edit the tip.", retry = true;
+  if (code === "rate_limited"){
+    title = "Too many checks at once."; body = "Wait a minute, then try again.";
+  } else if (code === "busy"){
+    title = "Verity is resting. Try again tomorrow."; body = "Verity has a daily limit on checks, and today's is used up."; retry = false;
+  } else if (code === "timeout"){
+    title = "This one took too long."; body = "Verity couldn't finish in time. Try again, or paste just the claim.";
+  } else if (code === "network"){
+    title = "You seem to be offline."; body = "Check your connection, then try again.";
+  } else if (code === "upstream"){
+    body = "Verity couldn't reach its checker just now. Try again in a moment.";
+  }
+  return stateHead+'<div class="state" role="alert"><h1 id="h-verdict" class="h2">'+esc(title)+'</h1><p class="muted">'+esc(body)+'</p><div class="row">'+
+    (retry ? '<button type="button" class="btn" id="retryBtn">Try again</button>' : '')+
+    '<button type="button" class="link" id="editBtn">Edit the tip</button></div></div>';
+}
+function nothingView(){
+  return stateHead+'<div class="state"><h1 id="h-verdict" class="h2">Nothing to check here.</h1><p class="muted">Verity checks tips that make a claim, like "Retinol works better at night" or "You need six months of savings." Paste one you\'ve seen.</p><div class="row"><button type="button" class="btn" id="editBtn">Paste a tip</button></div></div>';
+}
+function crisisView(){
+  return stateHead+'<div class="state" role="alert"><h1 id="h-verdict" class="h2">It sounds like things might be hard right now.</h1>'+
+    '<p>You don\'t have to go through it alone. In the US, you can call or text the Suicide and Crisis Lifeline any time, day or night.</p>'+
+    '<p class="big988">988</p><p class="muted">Call or text 988. If you\'re outside the US, contact your local emergency number.</p>'+
+    '<div class="row"><a class="btn" href="tel:988">Call 988</a><a class="link" href="sms:988">Text 988</a></div></div>';
+}
+function wireStateButtons(){
+  const r = $("#retryBtn"); if (r) r.addEventListener("click", () => S.last && runCheck(S.last.req, true));
+  const ed = $("#editBtn"); if (ed) ed.addEventListener("click", () => { go("check"); $("#tip").focus(); });
+}
+
+/* ---------- My Proof (F-Proof) ---------- */
+function renderProof(){
+  const all = S.proof.filter(p => p && EVIDENCE[p.evidence] && FIT[p.fit]);
+  const worked = all.filter(p => p.outcome === "worked").length;
+  const checks = Math.max(S.checks, all.length);
+  $("#proofSummary").innerHTML = checks === 0 ? "Your own evidence builds here." :
+    "You've checked <b>"+checks+" tip"+(checks===1?"":"s")+"</b>. <b>"+worked+" worked</b> for you.";
+  const fl = $("#proofFilter");
+  segment(fl, [{value:"all",label:"All"},{value:"beauty",label:"Beauty"},{value:"wellness",label:"Wellness"},{value:"money",label:"Money"}], S.filter, (v) => { S.filter = v; renderProof(); });
+  const list = $("#proofList"); list.innerHTML = "";
+  const items = all.filter(p => S.filter === "all" || p.category === S.filter);
+  if (!items.length){
+    list.innerHTML = '<li class="empty"><p class="h3">'+(all.length ? "Nothing saved in this category yet." : "Nothing saved yet.")+'</p><p class="muted">Check a tip, then tap Save to My Proof. Mark what you tried and how it went, and this becomes your own evidence.</p><div><button type="button" class="link" data-go="check">Check a tip</button></div></li>';
+    return;
+  }
+  for (const p of items){
+    const li = document.createElement("li"); li.className = "pitem";
+    const date = new Date(p.at).toLocaleDateString(undefined, {month:"short", day:"numeric"});
+    const triedLabel = p.tried === "tried" ? (p.outcome === "worked" ? "Worked for me" : p.outcome === "no_change" ? "No change" : p.outcome === "worse" ? "Made it worse" : "Tried") : "Not tried yet";
+    li.innerHTML =
+      '<div class="dateline"><span>'+esc(CATS[p.category]||"Other")+' · '+esc(date)+'</span><span>'+esc(triedLabel)+'</span></div>'+
+      '<span class="claim">'+esc(p.claim)+'</span>'+
+      '<div class="res">'+miniScale(p.evidence)+'<span class="label-strong">'+esc(EVIDENCE[p.evidence].label)+'</span><span class="label">· '+esc(FIT[p.fit].label)+'</span></div>'+
+      '<div class="more">'+
+        '<span class="label-strong" id="tl-'+p.id+'">Did you try it?</span><div class="seg sm" data-k="tried" role="group" aria-labelledby="tl-'+p.id+'"></div>'+
+        '<div class="stack" style="gap:8px" data-after '+(p.tried==="tried"?"":"hidden")+'>'+
+          '<span class="label-strong" id="ol-'+p.id+'">How did it go?</span><div class="seg sm" data-k="outcome" role="group" aria-labelledby="ol-'+p.id+'"></div>'+
+          '<label for="note-'+p.id+'">Note, optional</label><input class="line-input" type="text" id="note-'+p.id+'" placeholder="What you noticed">'+
+        '</div>'+
+      '</div>'+
+      '<button type="button" class="link small" data-remove>Remove</button>';
+    segment(li.querySelector('[data-k="tried"]'), [{value:"not_yet",label:"Not yet"},{value:"tried",label:"Tried"}], p.tried, (v) => { p.tried = v; if (v !== "tried") p.outcome = ""; saveStore(); renderProof(); });
+    segment(li.querySelector('[data-k="outcome"]'), [{value:"worked",label:"Worked for me"},{value:"no_change",label:"No change"},{value:"worse",label:"Made it worse"}], p.outcome, (v) => { p.outcome = p.outcome === v ? "" : v; saveStore(); renderProof(); });
+    const inp = li.querySelector("input"); inp.value = p.note || "";
+    inp.addEventListener("change", () => { p.note = inp.value.trim(); saveStore(); toast("Note saved"); });
+    li.querySelector("[data-remove]").addEventListener("click", () => { S.proof = S.proof.filter(x => x.id !== p.id); saveStore(); renderProof(); });
+    list.appendChild(li);
+  }
+}
+
+/* ---------- How it works legend ---------- */
+(function legend(){
+  const desc = {
+    not_supported:"Expert guidance doesn't back it, or it overstates a small effect.",
+    mixed:"There's something to it, but it depends on the person, overreaches, or the research is limited.",
+    well_supported:"Mainstream expert guidance clearly backs it.",
+    promotional:"It's mainly selling a course, product or program, so it sits off the scale.",
+    not_for_you:"Your profile gives a reason it doesn't fit, or it isn't supported.",
+    maybe:"It depends on something your profile doesn't cover.",
+    for_you:"It holds up and nothing in your profile argues against it.",
+    need_profile:"Fill in your profile to see whether it fits you."
+  };
+  const fitMini = (k) => '<div class="scale mini" aria-hidden="true"><div class="line"></div>'+(FIT[k].pos != null ? '<span class="marker" style="left:'+FIT[k].pos+'%"></span>' : '')+'</div>';
+  let h = '<p class="label-strong" style="padding-bottom:8px">Evidence</p>';
+  for (const k of ["not_supported","mixed","well_supported","promotional"]) h += '<div class="row">'+miniScale(k)+'<div><span class="label-strong">'+EVIDENCE[k].label+'</span><span class="muted">'+desc[k]+'</span></div></div>';
+  h += '<p class="label-strong" style="padding:20px 0 8px">Fit</p>';
+  for (const k of ["not_for_you","maybe","for_you","need_profile"]) h += '<div class="row">'+fitMini(k)+'<div><span class="label-strong">'+FIT[k].label+'</span><span class="muted">'+desc[k]+'</span></div></div>';
+  h += '<p class="label-strong" style="padding:20px 0 8px">Confidence</p><p class="muted">High, Medium or Low. Mixed evidence is never High.</p>';
+  $("#legend").innerHTML = h;
+})();
+
+/* ---------- boot ---------- */
+const hash = (location.hash || "").replace(/^#/, "");
+let qs = ""; try{ qs = location.search || ""; }catch(e){}
+S.booth = /[?&]booth=1\b/.test(qs);
+if (S.booth) document.documentElement.classList.add("booth");
+renderCheckControls(); renderExamples(); renderDemo(); renderProfile();
+if (S.booth) go("check");
+else if (VIEWS.includes(hash) && hash !== "verdict") go(hash);
+else go("welcome");
+window.addEventListener("hashchange", () => { const h = location.hash.replace(/^#/,""); if (VIEWS.includes(h) && h !== "verdict") go(h); });
+})();
+</script>
+</body>
+</html>

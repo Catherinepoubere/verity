@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Verity check a tip</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F3B2E}a:hover{color:#10281F}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1000px; box-sizing: border-box; position: relative; overflow: hidden; background: #F8F5EE; color: #10281F; font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; display: flex; flex-direction: column">
+  <svg viewBox="0 0 390 1000" width="390" height="1000" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none"><defs><filter id="gfc" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter></defs><rect x="0" y="0" width="390" height="1000" style="filter: url(#gfc); opacity: 0.035"></rect></svg>
+
+  <header style="position: relative; display: flex; align-items: baseline; padding: 20px 22px 0">
+    <span style="font-family: Newsreader, 'Times New Roman', serif; font-weight: 400; font-size: 26px; letter-spacing: -0.01em; color: #0F3B2E">verity</span><span style="width: 6px; height: 6px; margin-left: 2px; border-radius: 50%; background: linear-gradient(135deg, #B8912F, #F3E29A 45%, #C9A227 70%, #B08A2A)"></span>
+  </header>
+
+  <form style="position: relative; flex: 1; display: flex; flex-direction: column; gap: 22px; padding: 18px 22px 24px">
+    <h1 style="margin: 0; font-family: Newsreader, 'Times New Roman', serif; font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.02em">Check a tip</h1>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label for="tip" style="font-size: 14px; font-weight: 600">Paste the tip or caption.</label>
+      <textarea id="tip" rows="5" placeholder="For example: You don't need sunscreen on cloudy days." style="box-sizing: border-box; width: 100%; min-height: 150px; resize: none; border: 1px solid rgba(16,40,31,0.25); background: #FFFDF8; padding: 14px; font-family: Newsreader, 'Times New Roman', serif; font-weight: 300; font-size: 20px; line-height: 1.35; color: #10281F"></textarea>
+    </div>
+
+    <div style="display: flex; flex-direction: column">
+      <span style="font-size: 13px; color: #55665E; padding-bottom: 6px">Or try one of these</span>
+      <button type="button" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border: 0; border-top: 1px solid rgba(16,40,31,0.13); background: transparent; text-align: left; font-family: Newsreader, 'Times New Roman', serif; font-style: italic; font-weight: 300; font-size: 17px; color: #10281F">“Chemicals in sunscreen are worse for you than a sunburn.”<span aria-hidden="true" style="font-style: normal; color: #B8912F">→</span></button>
+      <button type="button" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border: 0; border-top: 1px solid rgba(16,40,31,0.13); background: transparent; text-align: left; font-family: Newsreader, 'Times New Roman', serif; font-style: italic; font-weight: 300; font-size: 17px; color: #10281F">“This coin is guaranteed to 10x by next month.”<span aria-hidden="true" style="font-style: normal; color: #B8912F">→</span></button>
+      <button type="button" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border: 0; border-top: 1px solid rgba(16,40,31,0.13); border-bottom: 1px solid rgba(16,40,31,0.13); background: transparent; text-align: left; font-family: Newsreader, 'Times New Roman', serif; font-style: italic; font-weight: 300; font-size: 17px; color: #10281F">“Pay off credit card debt before investing extra money.”<span aria-hidden="true" style="font-style: normal; color: #B8912F">→</span></button>
+    </div>
+
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+      <legend style="padding: 0 0 8px; font-size: 14px; font-weight: 600">Category <span style="font-weight: 400; color: #55665E">· detected</span></legend>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+        <button type="button" aria-pressed="true" style="min-height: 44px; border: 1px solid #0F3B2E; background: #0F3B2E; color: #FFFFFF; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Beauty</button>
+        <button type="button" aria-pressed="false" style="min-height: 44px; border: 1px solid rgba(16,40,31,0.25); border-left: 0; background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Wellness</button>
+        <button type="button" aria-pressed="false" style="min-height: 44px; border: 1px solid rgba(16,40,31,0.25); border-left: 0; background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Money</button>
+      </div>
+    </fieldset>
+
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+      <legend style="padding: 0 0 8px; font-size: 14px; font-weight: 600">Where did you see it?</legend>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <button type="button" aria-pressed="true" style="min-height: 40px; padding: 0 14px; border: 1px solid #0F3B2E; background: #0F3B2E; color: #FFFFFF; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">TikTok</button>
+        <button type="button" aria-pressed="false" style="min-height: 40px; padding: 0 14px; border: 1px solid rgba(16,40,31,0.25); background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Instagram</button>
+        <button type="button" aria-pressed="false" style="min-height: 40px; padding: 0 14px; border: 1px solid rgba(16,40,31,0.25); background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">YouTube</button>
+        <button type="button" aria-pressed="false" style="min-height: 40px; padding: 0 14px; border: 1px solid rgba(16,40,31,0.25); background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">A friend</button>
+        <button type="button" aria-pressed="false" style="min-height: 40px; padding: 0 14px; border: 1px solid rgba(16,40,31,0.25); background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Other</button>
+      </div>
+    </fieldset>
+
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+      <legend style="padding: 0 0 8px; font-size: 14px; font-weight: 600">Was it sponsored?</legend>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+        <button type="button" aria-pressed="false" style="min-height: 44px; border: 1px solid rgba(16,40,31,0.25); background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Yes</button>
+        <button type="button" aria-pressed="false" style="min-height: 44px; border: 1px solid rgba(16,40,31,0.25); border-left: 0; background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">No</button>
+        <button type="button" aria-pressed="true" style="min-height: 44px; border: 1px solid #0F3B2E; background: #0F3B2E; color: #FFFFFF; font-family: 'Schibsted Grotesk', sans-serif; font-size: 14px">Not sure</button>
+      </div>
+    </fieldset>
+
+    <button type="submit" style="min-height: 54px; border: 0; background: #0F3B2E; color: #FFFFFF; font-family: 'Schibsted Grotesk', sans-serif; font-size: 16px; font-weight: 500; box-shadow: inset 0 -2px 0 #C9A227">Check this tip</button>
+  </form>
+
+  <nav aria-label="Main" style="position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid rgba(16,40,31,0.13); background: #F8F5EE">
+    <a href="#" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; font-weight: 600; color: #0F3B2E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, #B8912F, #F3E29A 45%, #C9A227 70%, #B08A2A)"></span>Check</a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; color: #55665E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px"></span>My Proof</a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; color: #55665E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px"></span>Profile</a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; color: #55665E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px"></span>How it works</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Verity My Proof</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F3B2E}a:hover{color:#10281F}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1060px; box-sizing: border-box; position: relative; overflow: hidden; background: #F8F5EE; color: #10281F; font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; display: flex; flex-direction: column">
+  <svg viewBox="0 0 390 1060" width="390" height="1060" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none"><defs><filter id="gfp" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter></defs><rect x="0" y="0" width="390" height="1060" style="filter: url(#gfp); opacity: 0.035"></rect></svg>
+
+  <header style="position: relative; display: flex; align-items: baseline; padding: 20px 22px 0">
+    <span style="font-family: Newsreader, 'Times New Roman', serif; font-weight: 400; font-size: 26px; letter-spacing: -0.01em; color: #0F3B2E">verity</span><span style="width: 6px; height: 6px; margin-left: 2px; border-radius: 50%; background: linear-gradient(135deg, #B8912F, #F3E29A 45%, #C9A227 70%, #B08A2A)"></span>
+  </header>
+
+  <main style="position: relative; flex: 1; display: flex; flex-direction: column; gap: 18px; padding: 18px 22px 24px">
+    <h1 style="margin: 0; font-family: Newsreader, 'Times New Roman', serif; font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.02em">My Proof</h1>
+    <p style="margin: 0; font-family: Newsreader, 'Times New Roman', serif; font-weight: 300; font-size: 24px; line-height: 1.25">You've checked <span style="color: #0F3B2E; font-weight: 400">14 tips</span>. <span style="color: #0F3B2E; font-weight: 400">3 worked</span> for you.</p>
+
+    <nav aria-label="Filter by category" style="display: flex; gap: 22px; font-size: 14px; border-bottom: 1px solid rgba(16,40,31,0.13)">
+      <a href="#" aria-current="page" style="padding: 10px 0; text-decoration: none; font-weight: 600; box-shadow: inset 0 -2px 0 #C9A227">All</a>
+      <a href="#" style="padding: 10px 0; text-decoration: none; color: #55665E">Beauty</a>
+      <a href="#" style="padding: 10px 0; text-decoration: none; color: #55665E">Wellness</a>
+      <a href="#" style="padding: 10px 0; text-decoration: none; color: #55665E">Money</a>
+    </nav>
+
+    <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+      <sc-for list="{{items}}" as="it" hint-placeholder-count="4">
+        <li style="display: flex; flex-direction: column; gap: 10px; padding: 16px 0; border-bottom: 1px solid rgba(16,40,31,0.13)">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: #55665E"><span>{{it.cat}} · {{it.date}}</span><span>{{it.tried}}</span></div>
+          <span style="font-family: Newsreader, 'Times New Roman', serif; font-weight: 300; font-size: 21px; line-height: 1.2">{{it.claim}}</span>
+          <div style="display: flex; align-items: center; gap: 12px">
+            <div aria-hidden="true" style="position: relative; width: 96px; height: 12px; flex: none">
+              <div style="position: absolute; left: 0; right: 0; top: 5px; height: 1px; background: #10281F"></div>
+              <span style="position: absolute; left: {{it.pos}}; top: 0; margin-left: -6px; width: 11px; height: 11px; border-radius: 50%; background: linear-gradient(135deg, #B8912F, #F3E29A 45%, #C9A227 70%, #B08A2A); box-shadow: 0 0 0 1.5px #F8F5EE, 0 0 0 2.5px #0F3B2E"></span>
+            </div>
+            <span style="font-size: 13px; font-weight: 500">{{it.verdict}}</span>
+            <span style="font-size: 13px; color: #55665E">· {{it.fit}}</span>
+          </div>
+          <sc-if value="{{it.open}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 4px">
+              <span style="font-size: 13px; font-weight: 600">How did it go?</span>
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+                <button type="button" aria-pressed="true" style="min-height: 40px; border: 1px solid #0F3B2E; background: #0F3B2E; color: #FFFFFF; font-family: 'Schibsted Grotesk', sans-serif; font-size: 13px">Worked for me</button>
+                <button type="button" aria-pressed="false" style="min-height: 40px; border: 1px solid rgba(16,40,31,0.25); border-left: 0; background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 13px">No change</button>
+                <button type="button" aria-pressed="false" style="min-height: 40px; border: 1px solid rgba(16,40,31,0.25); border-left: 0; background: transparent; color: #10281F; font-family: 'Schibsted Grotesk', sans-serif; font-size: 13px">Made it worse</button>
+              </div>
+              <label for="note1" style="font-size: 13px; color: #55665E">Note, optional</label>
+              <input id="note1" type="text" value="Asleep by 11 most nights. More energy by day four." style="border: 0; border-bottom: 1px solid rgba(16,40,31,0.35); background: transparent; padding: 8px 0; font-family: Newsreader, 'Times New Roman', serif; font-style: italic; font-weight: 300; font-size: 17px; color: #10281F">
+            </div>
+          </sc-if>
+        </li>
+      </sc-for>
+    </ul>
+    <p style="margin: 0; font-size: 11.5px; color: #55665E">Example entries. Saved on this device only.</p>
+  </main>
+
+  <nav aria-label="Main" style="position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid rgba(16,40,31,0.13); background: #F8F5EE">
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; color: #55665E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px"></span>Check</a>
+    <a href="#" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; font-weight: 600; color: #0F3B2E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, #B8912F, #F3E29A 45%, #C9A227 70%, #B08A2A)"></span>My Proof</a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; color: #55665E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px"></span>Profile</a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 16px; font-size: 12.5px; color: #55665E; text-decoration: none"><span aria-hidden="true" style="width: 6px; height: 6px"></span>How it works</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      items: [
+        { cat: 'Wellness', date: 'Oct 24', tried: 'Tried', claim: 'Most adults need at least seven hours of sleep a night.', pos: '93%', verdict: 'Well supported', fit: 'For you', open: true },
+        { cat: 'Beauty', date: 'Oct 22', tried: 'Not yet', claim: 'Sunscreen ingredients are more harmful than a sunburn.', pos: '7%', verdict: 'Not supported', fit: 'Not for you', open: false },
+        { cat: 'Money', date: 'Oct 19', tried: 'Tried · worked for me', claim: 'Pay off high-interest debt before investing extra money.', pos: '93%', verdict: 'Well supported', fit: 'For you', open: false },
+        { cat: 'Beauty', date: 'Oct 15', tried: 'Tried · made it worse', claim: 'Beef tallow is the best moisturizer for every skin type.', pos: '50%', verdict: 'Mixed evidence', fit: 'Maybe for you', open: false }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
