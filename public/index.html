@@ -307,21 +307,21 @@ html.booth .booth-only{display:flex!important}
 .cover-art::after{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none}
 .cover-art > *{position:absolute}
 .cover-art .grid{inset:0;background-image:linear-gradient(rgba(201,162,39,0.16) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,0.16) 1px,transparent 1px);background-size:48px 48px;
-  -webkit-mask-image:var(--grid-mask);mask-image:var(--grid-mask);animation:cover-fade 2.8s ease-out both,cover-pan 40s linear infinite}
+  -webkit-mask-image:var(--grid-mask);mask-image:var(--grid-mask);animation:cover-fade 2.8s ease-out both}
 /* the noise: popular tips flare up while the crosshairs search, then dim once they lock on */
 .cover-art .noise{inset:0}
 .cover-art .noise span{position:absolute;font-family:var(--font-display);font-style:italic;font-weight:300;line-height:1;left:var(--mx);top:var(--my);font-size:.95rem;white-space:nowrap;color:var(--on-green-3);opacity:.45;
-  animation:cover-noise 6s var(--d) ease-out both,cover-drift 11s var(--d) ease-in-out infinite alternate,cover-twinkle 7s calc(7s + var(--d) * 4) ease-in-out infinite}
+  animation:cover-noise 5s var(--d) ease-out both,cover-drift 14s var(--d) ease-in-out infinite alternate}
 .cover-art .glow{inset:0;background:radial-gradient(circle at var(--cx) var(--cy),rgba(243,226,154,0.22),rgba(243,226,154,0.06) 22%,transparent 40%);
-  animation:cover-fade 1.6s 5.6s ease-out both,cover-breathe 5s 7.2s ease-in-out infinite alternate}
+  animation:cover-fade 1.6s 4.8s ease-out both,cover-breathe 6s 6.4s ease-in-out infinite alternate}
 .cover-art .cross-v{top:0;height:var(--vline);left:var(--cx);width:1px;background:linear-gradient(180deg,transparent,#B8912F 22%,#F3E29A var(--cy),#C9A227 70%,transparent);
-  animation:cover-search-x 5.6s .6s ease-in-out both}
+  animation:cover-search-x 4.4s .6s cubic-bezier(.3,.7,.3,1) both}
 .cover-art .cross-h{left:0;right:0;top:var(--cy);height:1px;background:linear-gradient(90deg,transparent 40%,#B8912F 58%,#F3E29A var(--cx),#C9A227 88%,transparent);
-  animation:cover-search-y 5.6s .9s ease-in-out both}
+  animation:cover-search-y 4.4s .9s cubic-bezier(.3,.7,.3,1) both}
 .cover-art .dot,.cover-art .ring{left:var(--cx);top:var(--cy);width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%}
-.cover-art .dot{background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.22),0 0 24px rgba(243,226,154,0.6);animation:cover-pop .9s 6.4s cubic-bezier(.3,1.6,.5,1) both}
-.cover-art .ring{border:1px solid var(--foil-solid);opacity:0;animation:cover-ping 3.2s 7s ease-out infinite}
-.cover-art .tag{left:calc(var(--cx) + 20px);top:calc(var(--cy) - 30px);font-family:var(--font-mono);font-size:var(--t-label);color:var(--foil-text);animation:cover-fade 1.2s 7s ease-out both}
+.cover-art .dot{background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.22),0 0 24px rgba(243,226,154,0.6);animation:cover-pop .9s 5.2s cubic-bezier(.3,1.6,.5,1) both}
+.cover-art .ring{border:1px solid var(--foil-solid);opacity:0;animation:cover-ping 3.6s 6s ease-out infinite}
+.cover-art .tag{left:calc(var(--cx) + 20px);top:calc(var(--cy) - 30px);font-family:var(--font-mono);font-size:var(--t-label);color:var(--foil-text);animation:cover-fade 1.2s 5.8s ease-out both}
 
 /* desktop: top nav, split screens for welcome and verdict, wider reading columns. The mockups are phone-only;
    this reuses their tokens and pieces. */
@@ -343,7 +343,7 @@ html.booth .booth-only{display:flex!important}
   .welcome-hero p{font-size:clamp(1.875rem,4.6vh,2.5rem)}
   .welcome-body{position:relative;flex:none;padding:0;gap:18px;width:min(46%,500px)}
   .welcome-body > .disclaimer{margin-top:4px;padding-top:0}
-  .cover-art{--cx:73%;--cy:42%;--sx:16vw;--sy:24vh;--dm:3;--vline:100%;--grid-mask:linear-gradient(90deg,transparent 30%,#000 62%)}
+  .cover-art{--cx:73%;--cy:42%;--sx:16vw;--sy:24vh;--dm:1.5;--vline:100%;--grid-mask:linear-gradient(90deg,transparent 30%,#000 62%)}
   .cover-art .noise span{left:var(--x);top:var(--y);font-size:var(--fs)}
   .cover-art .noise .dsk{display:inline}
 
@@ -372,12 +372,10 @@ html.booth .booth-only{display:flex!important}
 
 @keyframes cover-fade{from{opacity:0}}
 @keyframes cover-breathe{from{opacity:1}to{opacity:.6}}
-@keyframes cover-search-x{0%{transform:translateX(calc(var(--sx) * 1.6));opacity:0}12%{opacity:1}35%{transform:translateX(calc(var(--sx) * -1))}60%{transform:translateX(calc(var(--sx) * .55))}82%{transform:translateX(calc(var(--sx) * -.15))}100%{transform:none}}
-@keyframes cover-search-y{0%{transform:translateY(calc(var(--sy) * 1.6));opacity:0}12%{opacity:1}38%{transform:translateY(calc(var(--sy) * -.8))}64%{transform:translateY(calc(var(--sy) * .5))}84%{transform:translateY(calc(var(--sy) * -.12))}100%{transform:none}}
+@keyframes cover-search-x{0%{transform:translateX(calc(var(--sx) * 1.4));opacity:0}15%{opacity:1}65%{transform:translateX(calc(var(--sx) * -.2))}100%{transform:none}}
+@keyframes cover-search-y{0%{transform:translateY(calc(var(--sy) * 1.4));opacity:0}15%{opacity:1}65%{transform:translateY(calc(var(--sy) * -.2))}100%{transform:none}}
 @keyframes cover-noise{0%{opacity:0}20%{opacity:1;color:var(--on-green-2)}75%{opacity:1;color:var(--on-green-2)}100%{opacity:.45}}
 @keyframes cover-drift{to{transform:translate(calc(var(--dx) * var(--dm)),calc(var(--dy) * var(--dm)))}}
-@keyframes cover-twinkle{0%,100%{opacity:.45}45%{opacity:.9;color:var(--on-green-2)}}
-@keyframes cover-pan{to{background-position:48px 48px}}
 @keyframes cover-pop{from{transform:scale(0)}}
 @keyframes cover-ping{from{transform:scale(1);opacity:.8}to{transform:scale(4.5);opacity:0}}
 
