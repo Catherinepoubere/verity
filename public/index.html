@@ -133,6 +133,7 @@ select.input{appearance:none;-webkit-appearance:none;color:var(--ink);background
 input.line-input{width:100%;border:0;border-bottom:1px solid rgba(16,40,31,0.35);background:transparent;padding:8px 0;font-style:italic;font-size:1.0625rem}
 textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-offset:1px}
 .field{display:flex;flex-direction:column;gap:8px}
+.cols,.col{display:flex;flex-direction:column;gap:22px}
 
 /* example list */
 .examples{display:flex;flex-direction:column}
@@ -276,11 +277,56 @@ nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:6px;pa
 nav.tabs button::before{content:"";width:6px;height:6px;border-radius:50%}
 nav.tabs button[aria-current="page"]{font-weight:500;color:var(--green)}
 nav.tabs button[aria-current="page"]::before{background:var(--foil-dot)}
+nav.tabs .nav-mark{display:none}
 html.booth .no-booth{display:none!important}
 .booth-only{display:none!important}
 html.booth .booth-only{display:flex!important}
 
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--green);color:#FFFFFF;padding:12px 18px;font-family:var(--font-mono);font-size:var(--t-control);box-shadow:inset 0 -2px 0 var(--foil-solid);max-width:calc(100% - 44px)}
+
+/* desktop: top nav, split screens for welcome and verdict, wider reading columns. The mockups are phone-only;
+   this reuses their tokens and pieces. */
+@media (min-width: 960px){
+  :root{--nav-h:68px;--gutter:56px;--gutter-r:56px}
+  .app{max-width:none}
+  nav.tabs{order:-1;position:sticky;top:0;bottom:auto;display:flex;align-items:center;gap:36px;height:var(--nav-h);padding:0 40px;border-top:0;border-bottom:1px solid var(--hairline)}
+  nav.tabs .nav-mark{display:inline-flex;flex-direction:row;align-items:baseline;gap:0;margin-right:auto;padding:0;font-family:var(--font-display);font-size:1.625rem;color:var(--green)}
+  nav.tabs .nav-mark::before{display:none}
+  nav.tabs button:not(.nav-mark){flex-direction:row;gap:8px;height:100%;padding:0}
+  header.top{display:none}
+  .toast{bottom:32px}
+
+  /* welcome: velvet panel left, the pitch right */
+  #v-welcome{flex-direction:row;min-height:100vh;min-height:100dvh}
+  .welcome-hero{height:auto;flex:1 1 56%;padding:64px;gap:24px}
+  .hero-mark{font-size:clamp(7.375rem,13vw,13rem)}
+  .welcome-hero p{font-size:2.75rem}
+  .welcome-body{flex:1 1 44%;justify-content:center;padding:64px;gap:22px}
+  .welcome-body > *{width:100%;max-width:500px}
+  .welcome-body > .disclaimer{margin-top:8px;padding-top:0}
+
+  /* check: the tip on the left, the details on the right */
+  #checkForm{width:100%;max-width:1160px;margin:0 auto;padding-top:48px;padding-bottom:56px}
+  #checkForm .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:64px;align-items:start}
+  textarea.tip{min-height:220px}
+
+  /* verdict: the evidence stays in view on the left while you read the right */
+  #verdictOut > article{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:1}
+  .v-hero{position:sticky;top:var(--nav-h);align-self:start;min-height:calc(100vh - var(--nav-h));min-height:calc(100dvh - var(--nav-h));justify-content:center;gap:22px}
+  .v-hero header{justify-content:flex-start}
+  .v-hero header .mark-green{display:none}
+  .v-hero .meta{text-align:left}
+  .verdict{font-size:4.75rem}
+  .v-body{padding-top:56px;max-width:680px}
+
+  /* reading pages */
+  #profileForm,#v-proof > .pad,#v-how > .pad,.state{width:100%;max-width:760px;margin:0 auto;padding-top:48px;padding-bottom:64px}
+
+  /* checking overlay */
+  .checking .inner{max-width:960px}
+  .checking header{top:28px}
+  .checking .status p:first-child{font-size:3.25rem}
+}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -369,6 +415,8 @@ html.booth .booth-only{display:flex!important}
         <span class="label-strong" id="demoLab1">Demo profile</span>
         <div class="seg demo-seg"></div>
       </div>
+      <div class="cols">
+      <div class="col">
       <div class="field">
         <label class="label-strong" for="tip">Paste the tip or caption.</label>
         <textarea class="tip" id="tip" rows="5" maxlength="2000" placeholder="For example: You don't need sunscreen on cloudy days."></textarea>
@@ -377,6 +425,8 @@ html.booth .booth-only{display:flex!important}
         <span class="label" style="padding-bottom:6px">Or try one of these</span>
         <div class="examples" id="examples"></div>
       </div>
+      </div>
+      <div class="col">
       <fieldset>
         <legend>Category <span class="label" id="catState"></span></legend>
         <div class="seg" id="catSeg"></div>
@@ -386,6 +436,8 @@ html.booth .booth-only{display:flex!important}
       <button class="btn tall" type="submit" id="checkBtn">Check this tip</button>
       <p class="flags" id="checkErr" role="alert" hidden></p>
       <p class="disclaimer">Verity explains evidence. It isn't medical, legal or financial advice.</p>
+      </div>
+      </div>
     </form>
   </section>
 
@@ -455,6 +507,7 @@ html.booth .booth-only{display:flex!important}
 </main>
 
 <nav class="tabs" id="tabs" aria-label="Main">
+  <button type="button" class="mark-ivory nav-mark" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button>
   <button type="button" data-go="check" data-tab="check">Check</button>
   <button type="button" data-go="proof" data-tab="proof">My Proof</button>
   <button type="button" data-go="profile" data-tab="profile" class="no-booth">Profile</button>
