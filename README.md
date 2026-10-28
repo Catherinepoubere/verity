@@ -23,7 +23,7 @@ Your profile and My Proof stay in your browser's `localStorage`. There are no ac
 
 ## Design
 
-The look comes from `reference/design/`: ivory and velvet green, gold foil, Newsreader for reading and IBM Plex Mono for labels and controls, square controls and a text-only nav. Every verdict sits as a foil marker on a scale, for evidence and for fit. On screens 960px and wider it switches to a top nav and split layouts: the velvet panel beside the pitch on Welcome, beside the reading on Verdict. v1 ships a light theme only.
+The look comes from `reference/design/`: ivory and velvet green, gold foil, Newsreader for reading and IBM Plex Mono for labels and controls, square controls and a text-only nav. Every verdict sits as a foil marker on a scale, for evidence and for fit. On screens 960px and wider it switches to a top nav and split layouts: an all-velvet Welcome with a gold grid whose crosshairs glide in and lock onto a foil dot, and the velvet panel beside the reading on Verdict. v1 ships a light theme only.
 
 ## Run it locally
 

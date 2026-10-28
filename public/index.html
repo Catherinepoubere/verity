@@ -149,6 +149,8 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-o
 .welcome-hero .nw{white-space:nowrap} /* break only between the two phrases, keeping "More truth" together */
 .welcome-body{padding:24px var(--gutter-r) 20px var(--gutter);display:flex;flex-direction:column;gap:18px;flex:1}
 .welcome-body > .disclaimer{margin-top:auto;padding-top:24px}
+.ex-fig{padding-top:14px;border-top:1px solid var(--hairline);display:flex;flex-direction:column;gap:10px}
+.cover-art{display:none}
 
 /* the scale */
 .scale{position:relative}
@@ -296,14 +298,40 @@ html.booth .booth-only{display:flex!important}
   header.top{display:none}
   .toast{bottom:32px}
 
-  /* welcome: velvet panel left, the pitch right */
-  #v-welcome{flex-direction:row;min-height:100vh;min-height:100dvh}
-  .welcome-hero{height:auto;flex:1 1 56%;padding:64px;gap:24px}
-  .hero-mark{font-size:clamp(7.375rem,13vw,13rem)}
-  .welcome-hero p{font-size:2.75rem}
-  .welcome-body{flex:1 1 44%;justify-content:center;padding:64px;gap:22px}
-  .welcome-body > *{width:100%;max-width:500px}
-  .welcome-body > .disclaimer{margin-top:8px;padding-top:0}
+  /* welcome: all velvet. Everything sits in the left column; on the right a gold grid, crosshairs that glide in
+     and lock onto a foil dot, "fits you". Final positions are the base styles, so reduced motion shows the finished frame. */
+  #v-welcome{position:relative;overflow:hidden;justify-content:center;gap:30px;padding:56px 64px;min-height:100vh;min-height:100dvh;color:var(--on-green)}
+  .welcome-hero{background:none;height:auto;flex:none;padding:0;gap:18px;max-width:46%}
+  .welcome-hero::before{display:none}
+  .hero-mark{font-size:clamp(6rem,16vh,11rem)}
+  .welcome-hero p{font-size:clamp(1.875rem,4.6vh,2.5rem)}
+  .welcome-body{position:relative;flex:none;padding:0;gap:18px;width:min(46%,500px)}
+  .welcome-body > .disclaimer{margin-top:4px;padding-top:0}
+  #v-welcome .lead,#v-welcome .label,#v-welcome .ex .scale-labels{color:var(--on-green-2)}
+  #v-welcome .ex-fig{border-top-color:rgba(255,255,255,0.16)}
+  #v-welcome .quote{color:var(--on-green-quote)}
+  #v-welcome .ex .line{height:2px;background:var(--foil-line)}
+  #v-welcome .ex .tick{background:var(--on-green-2)}
+  #v-welcome .ex .marker{box-shadow:0 0 0 4px rgba(233,204,116,0.22)}
+  #v-welcome .ex .scale-labels .on,#v-welcome .link{color:var(--on-green)}
+  #v-welcome .disclaimer{color:var(--on-green-3)}
+  #v-welcome :focus-visible{outline-color:var(--foil-text)}
+
+  .cover-art{--cx:73%;--cy:42%;display:block;position:absolute;inset:0;background:var(--velvet);overflow:hidden}
+  .cover-art::after{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none}
+  .cover-art > *{position:absolute}
+  .cover-art .grid{inset:0;background-image:linear-gradient(rgba(201,162,39,0.16) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,0.16) 1px,transparent 1px);background-size:48px 48px;
+    -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 62%);mask-image:linear-gradient(90deg,transparent 30%,#000 62%);animation:cover-fade 1.6s ease-out both}
+  .cover-art .glow{inset:0;background:radial-gradient(circle at var(--cx) var(--cy),rgba(243,226,154,0.22),rgba(243,226,154,0.06) 22%,transparent 40%);
+    animation:cover-fade 1.2s 1.4s ease-out both,cover-breathe 5s 2.6s ease-in-out infinite alternate}
+  .cover-art .cross-v{top:0;bottom:0;left:var(--cx);width:1px;background:linear-gradient(180deg,transparent,#B8912F 22%,#F3E29A var(--cy),#C9A227 70%,transparent);
+    animation:cover-glide-x 1.5s .3s cubic-bezier(.2,.8,.2,1) both}
+  .cover-art .cross-h{left:0;right:0;top:var(--cy);height:1px;background:linear-gradient(90deg,transparent 40%,#B8912F 58%,#F3E29A var(--cx),#C9A227 88%,transparent);
+    animation:cover-glide-y 1.5s .45s cubic-bezier(.2,.8,.2,1) both}
+  .cover-art .dot,.cover-art .ring{left:var(--cx);top:var(--cy);width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%}
+  .cover-art .dot{background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.22),0 0 24px rgba(243,226,154,0.6);animation:cover-pop .6s 1.7s cubic-bezier(.3,1.6,.5,1) both}
+  .cover-art .ring{border:1px solid var(--foil-solid);opacity:0;animation:cover-ping 2.8s 2.4s ease-out infinite}
+  .cover-art .tag{left:calc(var(--cx) + 20px);top:calc(var(--cy) - 30px);font-family:var(--font-mono);font-size:var(--t-label);color:var(--foil-text);animation:cover-fade .8s 2.1s ease-out both}
 
   /* check: the tip on the left, the details on the right */
   #checkForm{width:100%;max-width:1160px;margin:0 auto;padding-top:48px;padding-bottom:56px}
@@ -328,6 +356,13 @@ html.booth .booth-only{display:flex!important}
   .checking .status p:first-child{font-size:3.25rem}
 }
 
+@keyframes cover-fade{from{opacity:0}}
+@keyframes cover-breathe{from{opacity:1}to{opacity:.6}}
+@keyframes cover-glide-x{from{transform:translateX(30vw);opacity:0}}
+@keyframes cover-glide-y{from{transform:translateY(40vh);opacity:0}}
+@keyframes cover-pop{from{transform:scale(0)}}
+@keyframes cover-ping{from{transform:scale(1);opacity:.8}to{transform:scale(4.5);opacity:0}}
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -339,13 +374,14 @@ html.booth .booth-only{display:flex!important}
 
   <!-- 1. Welcome (F-Welcome) -->
   <section class="view" id="v-welcome" aria-labelledby="h-welcome">
+    <div class="cover-art" aria-hidden="true"><div class="grid"></div><div class="glow"></div><div class="cross-v"></div><div class="cross-h"></div><span class="ring"></span><span class="dot"></span><span class="tag">fits you</span></div>
     <div class="on-green welcome-hero">
       <h1 id="h-welcome" class="hero-mark foil-text">verity</h1>
       <p><span class="nw">Less <em>noise</em>. More <em>truth</em>,</span> <span class="nw">tailored to <em>you</em>.</span></p>
     </div>
     <div class="welcome-body">
       <p class="lead">Paste a tip you saw about skincare, wellness or money. Verity checks it against the evidence, then checks if it fits you.</p>
-      <figure aria-label="Example: a tip placed on the evidence scale at Not supported" style="padding-top:14px;border-top:1px solid var(--hairline);display:flex;flex-direction:column;gap:10px">
+      <figure class="ex-fig" aria-label="Example: a tip placed on the evidence scale at Not supported">
         <span class="quote" style="font-size:var(--t-lead)">“You don't need sunscreen on cloudy days.”</span>
         <div class="scale ex" aria-hidden="true">
           <div class="line"></div><span class="tick"></span>
