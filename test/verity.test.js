@@ -115,6 +115,8 @@ test("GUARD_RE flags brands, doses and diagnoses but not plain advice", () => {
   assert.ok(GUARD_RE.test("take 500 mg"));
   assert.ok(GUARD_RE.test("you probably have rosacea"));
   assert.ok(!GUARD_RE.test("A mineral sunscreen made for sensitive skin is a common alternative."));
+  assert.ok(!GUARD_RE.test("Adding whether you have anxiety symptoms would help judge this."));
+  assert.ok(!GUARD_RE.test("Talk to a doctor if you have anxiety."));
 });
 
 function call(body, headers = {}, method = "POST"){

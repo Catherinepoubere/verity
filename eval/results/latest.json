@@ -18,7 +18,7 @@
  "runs_consistent": 3,
  "demo_consistent": 5,
  "demo_total": 5,
- "guardrail_breaks": 1,
+ "guardrail_breaks": 0,
  "ask_pro": [
   {
    "id": 12,
@@ -29,9 +29,9 @@
    "hits": 3
   }
  ],
- "avg_ms": 4353,
+ "avg_ms": 4366,
  "fit_changes": 3,
- "sources_every_run": 7,
- "sources_any_run": 9,
- "pass": false
+ "sources_every_run": 5,
+ "sources_any_run": 6,
+ "pass": true
 }
