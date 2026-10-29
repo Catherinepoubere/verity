@@ -168,6 +168,27 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-o
 .w-chart .lit{right:16px;top:26px;gap:10px;font-size:14px;color:var(--foil-text)}
 .w-chart .lit b{width:14px;height:14px;border-radius:50%;background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.18),0 0 24px rgba(233,204,116,0.55);flex:none}
 .w-chart .ax{position:absolute;font-family:var(--font-mono);font-size:var(--t-micro);color:var(--on-green-3);white-space:nowrap}
+/* The chart builds once on load: box, center lines, the faint claims one at a time, then the gold marker glides
+   in and settles (no overshoot). After that only its glow pulses. Final positions are the base styles, so reduced
+   motion shows the finished chart. */
+.w-chart{animation:w-fade .8s ease-out both}
+.w-chart .vl{transform-origin:top;animation:w-draw-y 1.2s .3s cubic-bezier(.2,.8,.2,1) both}
+.w-chart .hl{transform-origin:left;animation:w-draw-x 1.2s .5s cubic-bezier(.2,.8,.2,1) both}
+.w-chart .ax{animation:w-fade .8s 1s ease-out both}
+.w-chart .pt{animation:w-rise .9s ease-out both}
+.w-chart .pt:nth-child(3){animation-delay:1.1s}
+.w-chart .pt:nth-child(4){animation-delay:1.4s}
+.w-chart .pt:nth-child(5){animation-delay:1.7s}
+.w-chart .pt:nth-child(6){animation-delay:2s}
+.w-chart .pt:nth-child(7){animation-delay:2.3s}
+.w-chart .lit{animation:w-glide 1.8s 2.7s cubic-bezier(.2,.8,.2,1) both}
+.w-chart .lit b{animation:w-glow 3.2s 4.6s ease-in-out infinite}
+@keyframes w-fade{from{opacity:0}}
+@keyframes w-draw-y{from{transform:scaleY(0)}}
+@keyframes w-draw-x{from{transform:scaleX(0)}}
+@keyframes w-rise{from{opacity:0;transform:translateY(8px)}}
+@keyframes w-glide{from{opacity:0;transform:translate(-90px,90px)}to{opacity:1;transform:none}}
+@keyframes w-glow{0%,100%{box-shadow:0 0 0 5px rgba(233,204,116,0.18),0 0 24px rgba(233,204,116,0.55)}50%{box-shadow:0 0 0 9px rgba(233,204,116,0.08),0 0 36px rgba(233,204,116,0.7)}}
 .w-text{display:flex;flex-direction:column;gap:14px;margin-top:14px}
 .w-text h1{font-family:var(--font-display);font-weight:300;font-size:var(--t-h1);line-height:1.08;letter-spacing:-0.3px}
 .w-text h1 em{font-style:italic;font-weight:300}
