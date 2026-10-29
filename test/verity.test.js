@@ -2,7 +2,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Readable } from "node:stream";
-import { normalize, sanitizeRequest, checkTip, buildPrompt, requestParams, GUARD_RE } from "../lib/verity.js";
+import { normalize, sanitizeRequest, checkTip, buildPrompt, requestParams, headline, present, GUARD_RE } from "../lib/verity.js";
+import { SOURCES, sourceById, SOURCE_TYPES } from "../lib/sources.js";
 process.env.ANTHROPIC_API_KEY ||= "test-key"; // the handler refuses to call Claude without a key
 import handler, { setClientForTests } from "../api/check.js";
 
@@ -30,6 +31,51 @@ test("normalize applies the brief's rules", () => {
   assert.equal(normalize({ ...good, evidence: { ...good.evidence, verdict: "true" } }, {}), null);
   assert.equal(normalize({ ...good, confidence: "very" }, {}), null);
   assert.equal(normalize({ ...good, next_step: "" }, {}), null);
+});
+
+test("normalize keeps only verified sources, drops unsourced figures and yes/no openers", () => {
+  const raw = { ...good,
+    evidence: { verdict: "well_supported", why: "Yes. Card rates average about 21.5% when interest is charged. Some say 30% returns are easy. Paying it down is a sure saving.", basis: "consumer finance" },
+    fit: { ...good.fit, reason: "No, you have debt." },
+    sources: ["sec-pay-high-interest-debt", "fed-g19-card-rates", "fed-g19-card-rates", "made-up", "cdc-sleep-hours", "aad-cloudy-days"],
+    evidence_base: "official data and regulator guidance" };
+  const d = normalize(raw, { tip: "Pay off card debt first", profile: { high_interest_debt: "Yes" } });
+  assert.deepEqual(d.sources, ["sec-pay-high-interest-debt", "fed-g19-card-rates", "aad-cloudy-days"]); // unverified cdc-sleep-hours dropped, capped at 3
+  assert.equal(d.evidence.why, "Card rates average about 21.5% when interest is charged. Paying it down is a sure saving.");
+  assert.equal(d.fit.reason, "You have debt.");
+  assert.equal(d.evidence_base, "official data and regulator guidance");
+  // A figure quoted from the advice itself is allowed.
+  const promo = normalize({ ...good, evidence: { verdict: "promotional", why: "Earning $5,000 a week from home is not typical.", basis: "x" }, sources: [] }, { tip: "Make $5,000 a week", profile: null });
+  assert.equal(promo.evidence.why, "Earning $5,000 a week from home is not typical.");
+  // If every sentence had an unsourced figure, the answer is rejected and retried.
+  assert.equal(normalize({ ...good, evidence: { ...good.evidence, why: "Returns of 12% are typical." }, sources: [] }, { tip: "t", profile: null }), null);
+});
+
+test("headline follows the v2 table", () => {
+  assert.deepEqual(headline("well_supported", "for_you"), ["Supported.", "A good fit for you."]);
+  assert.deepEqual(headline("mixed", "maybe"), ["Mixed evidence.", "Go carefully."]);
+  assert.deepEqual(headline("well_supported", "need_profile"), ["Supported."]);
+  assert.deepEqual(headline("not_supported", "for_you"), ["Not supported.", "Better to skip this one."]);
+  assert.deepEqual(headline("promotional", "maybe"), ["Promotional.", "Mainly selling something."]);
+});
+
+test("present adds the headline and full source entries", () => {
+  const d = present(normalize({ ...good, sources: ["fed-g19-card-rates"] }, { tip: "t", profile: { high_interest_debt: "Yes" } }));
+  assert.deepEqual(d.headline, ["Mixed evidence.", "Could work for you."]);
+  assert.equal(d.source_details[0].figure, "21.5%");
+  assert.equal(d.source_details[0].url, "https://www.federalreserve.gov/releases/g19/");
+});
+
+test("source library: unique ids, allowed types, unverified entries hidden", () => {
+  assert.equal(new Set(SOURCES.map(s => s.id)).size, SOURCES.length);
+  for (const s of SOURCES){
+    assert.ok(SOURCE_TYPES.includes(s.type), s.id);
+    assert.match(s.url, /^https:\/\//);
+    if (!s.verified) assert.equal(sourceById(s.id), null);
+  }
+  const p = buildPrompt({ tip: "x", category: "wellness", profile: null });
+  assert.ok(!p.includes("cdc-sleep-hours"), "unverified sources never reach the model");
+  assert.match(buildPrompt({ tip: "x", category: "money", profile: null }), /id: fed-g19-card-rates/);
 });
 
 test("sanitizeRequest keeps only known profile keys and trims the tip", () => {

@@ -7,3 +7,5 @@ eval/results/*
 !eval/results/final.csv
 !eval/results/final.json
 .DS_Store
+!eval/results/latest.json
+public/latest.json

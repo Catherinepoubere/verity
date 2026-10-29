@@ -9,7 +9,7 @@ import handler from "./api/check.js";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, "public");
 const PORT = Number(process.env.PORT) || 3000;
-const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".js": "text/javascript", ".css": "text/css" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png" };
 
 http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://localhost");

@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Verity</title>
-<meta name="description" content="Verity checks advice from social media against the evidence and against you.">
+<meta name="description" content="Verity reviews the skincare, wellness and money advice in your feed against the evidence, and against your life.">
+<!-- Sharing. og:image needs an absolute URL; update it if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Verity">
+<meta property="og:description" content="Less noise. More truth, tailored to you.">
+<meta property="og:image" content="https://veritybeta-eta.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Verity. Less noise. More truth, tailored to you.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Verity">
+<meta name="twitter:description" content="Less noise. More truth, tailored to you.">
+<meta name="twitter:image" content="https://veritybeta-eta.vercel.app/og.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#F8F5EE">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,12 +55,12 @@
   --foil-solid:#C9A227; --foil-text:#E9CC74;
   --on-green:#FFFFFF; --on-green-2:#C9D6CF; --on-green-3:#A9C2B6; --on-green-quote:#DCE6E0; --drift:#5E8676;
   --supported:#2E7D5B; --mixed:#B45F14; --notsup:#B23A2E; --promo:#6B4FA1;
-  --gutter:max(22px, env(safe-area-inset-left, 0px));
-  --gutter-r:max(22px, env(safe-area-inset-right, 0px));
+  --gutter:max(24px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(24px, env(safe-area-inset-right, 0px));
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 html{font-size:16px;-webkit-text-size-adjust:100%}
-html.booth{font-size:17.5px} /* booth: larger text everywhere, since the scale is in rem */
+/* Booth mode used to enlarge all text; v2 booth mockups (Booth.html, NoDebt.html) set exact sizes, so it no longer does. */
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--font-text);font-optical-sizing:auto;font-size:var(--t-body);font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -124,16 +136,14 @@ legend{padding:0 0 8px}
 .chips button{min-height:40px;padding:0 14px;border:1px solid var(--control-line);border-radius:0;background:transparent;color:var(--ink);font-size:var(--t-control);font-weight:400;cursor:pointer}
 .seg button[aria-pressed="true"],.chips button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#FFFFFF}
 
-/* inputs: the tip is written in the serif */
+/* inputs: pasted advice is written in the serif */
 textarea,input[type="text"]{font-family:var(--font-display);font-weight:300;font-size:1.25rem;line-height:1.35;color:var(--ink);background:var(--field);border:1px solid var(--control-line);border-radius:0}
-textarea.tip{width:100%;min-height:150px;resize:vertical;padding:14px}
 .input{width:100%;padding:12px 14px}
 textarea.input{resize:vertical}
 select.input{appearance:none;-webkit-appearance:none;color:var(--ink);background-color:var(--field);border:1px solid var(--control-line);border-radius:0;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px;min-height:48px}
 input.line-input{width:100%;border:0;border-bottom:1px solid rgba(16,40,31,0.35);background:transparent;padding:8px 0;font-style:italic;font-size:1.0625rem}
 textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-offset:1px}
 .field{display:flex;flex-direction:column;gap:8px}
-.cols,.col{display:flex;flex-direction:column;gap:22px}
 
 /* example list */
 .examples{display:flex;flex-direction:column}
@@ -141,15 +151,40 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-o
 .examples button:last-child{border-bottom:1px solid var(--hairline)}
 .examples .arr{font-style:normal;color:#B8912F;flex:none}
 
-/* welcome */
-.welcome-hero{height:430px;flex:none;padding:26px var(--gutter-r) 30px var(--gutter);display:flex;flex-direction:column;justify-content:flex-end;gap:16px}
-.hero-mark{font-family:var(--font-display);font-weight:300;font-size:var(--t-hero);line-height:.85;letter-spacing:-0.035em}
-.welcome-hero p{font-family:var(--font-display);font-weight:300;font-size:1.875rem;line-height:1.1;color:var(--on-green)}
-.welcome-hero p em{font-style:italic;font-weight:300}
-.welcome-hero .nw{white-space:nowrap} /* break only between the two phrases, keeping "More truth" together */
-.welcome-body{padding:24px var(--gutter-r) 20px var(--gutter);display:flex;flex-direction:column;gap:18px;flex:1}
-.welcome-body > .disclaimer{margin-top:auto;padding-top:24px}
-.ex-fig{padding-top:14px;border-top:1px solid var(--hairline);display:flex;flex-direction:column;gap:10px}
+/* welcome (reference/design/v2/Welcome.html): one velvet screen with a static, decorative chart */
+#v-welcome{position:relative;overflow:hidden;background:var(--velvet);color:var(--on-green);padding:20px var(--gutter-r) 28px var(--gutter);gap:24px;min-height:100vh;min-height:100dvh}
+#v-welcome::before{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none}
+#v-welcome > *{position:relative}
+#v-welcome :focus-visible{outline-color:var(--foil-text)}
+.w-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.w-top .mark-green{font-size:1.625rem;cursor:default}
+.w-top .label,#v-welcome .disclaimer{color:var(--on-green-3)}
+.w-chart{flex:none;height:260px;border:1px solid rgba(255,255,255,0.12)}
+.w-chart .vl,.w-chart .hl,.plot .vl,.plot .hl{position:absolute}
+.w-chart .vl{left:50%;top:0;bottom:0;width:1px;background:rgba(233,204,116,0.22)}
+.w-chart .hl{top:50%;left:0;right:0;height:1px;background:rgba(233,204,116,0.22)}
+.w-chart .pt{position:absolute;display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-style:italic;font-size:13px;line-height:1.3;color:#8FAE9F;white-space:nowrap}
+.w-chart .pt i{width:6px;height:6px;border-radius:50%;background:#8FAE9F;flex:none}
+.w-chart .lit{right:16px;top:26px;gap:10px;font-size:14px;color:var(--foil-text)}
+.w-chart .lit b{width:14px;height:14px;border-radius:50%;background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.18),0 0 24px rgba(233,204,116,0.55);flex:none}
+.w-chart .ax{position:absolute;font-family:var(--font-mono);font-size:var(--t-micro);color:var(--on-green-3);white-space:nowrap}
+.w-text{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.w-text h1{font-family:var(--font-display);font-weight:300;font-size:var(--t-h1);line-height:1.08;letter-spacing:-0.3px}
+.w-text h1 em{font-style:italic;font-weight:300}
+.w-text p{font-size:var(--t-lead);line-height:1.45;color:var(--on-green-2)}
+.w-actions{margin-top:auto;display:flex;flex-direction:column;gap:18px;align-items:center}
+.w-actions .btn{width:100%;font-size:.9375rem}
+.w-actions .link{min-height:0;color:var(--on-green)}
+.w-actions .link:hover{color:var(--foil-text)}
+.w-actions .disclaimer{text-align:center}
+
+/* check (reference/design/v2/Check.html): fits above the fold at 390x844 with the nav showing */
+#checkForm{gap:20px;padding-top:20px}
+.h-screen{font-family:var(--font-display);font-weight:300;font-size:var(--t-h2);line-height:1.1}
+textarea.tip{width:100%;height:128px;resize:none;padding:14px 16px}
+.cat-line{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:var(--font-mono);font-size:var(--t-label);color:var(--stone)}
+#checkForm .link.small{min-height:0;color:var(--ink);text-underline-offset:3px}
+#checkBtn{font-size:.9375rem}
 
 /* the scale */
 .scale{position:relative}
@@ -158,38 +193,12 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-o
 .scale .scale-labels{position:absolute;left:0;right:0;display:flex;justify-content:space-between}
 .scale .scale-labels .on{font-weight:500}
 .marker{position:absolute;border-radius:50%}
-/* evidence scale, on green */
-.ev{height:92px}
-.ev .line{top:40px;height:2px;background:var(--foil-line)}
-.ev.promo .line{opacity:.3}
-.ev .tick{top:34px;height:14px;background:var(--on-green-2)}
-.ev .scale-labels{top:60px}
-.ev .scale-labels .on{color:var(--on-green)}
-.ev .pin{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px}
-.ev .pin b{font-family:var(--font-mono);font-size:var(--t-micro);font-weight:500;color:var(--foil-text);white-space:nowrap}
-.ev .pin .marker{position:static;width:14px;height:14px;margin-top:6px;background:var(--foil-dot);box-shadow:0 0 0 4px rgba(233,204,116,0.22)}
-.ev .promo-note{position:absolute;right:0;top:78px}
-.ev.promo .scale-labels{opacity:.7}
-.settle .pin{transition:left 480ms cubic-bezier(.2,.8,.2,1)}
 /* checking sweep */
 .sweep{height:60px}
 .sweep .line{top:20px;height:2px;background:var(--foil-line);opacity:.5}
 .sweep .trail{position:absolute;top:18px;height:6px;width:33%}
 .sweep .marker{top:14px;width:14px;height:14px;margin-left:-7px;background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.22),0 0 18px rgba(243,226,154,0.6)}
 .sweep .scale-labels{top:38px;color:var(--on-green-3)}
-/* fit scale, on ivory */
-.fit{height:46px}
-.fit .line{top:12px;height:1px;background:var(--ink)}
-.fit .tick{left:50%;top:6px;height:12px;background:var(--stone)}
-.fit .marker{top:5px;width:14px;height:14px;transform:translateX(-50%);background:var(--foil-dot);box-shadow:0 0 0 2px var(--ivory),0 0 0 3px var(--green)}
-.fit .scale-labels{top:26px}
-.fit .scale-labels .on,.ex .scale-labels .on{color:var(--ink)}
-/* example scale on welcome */
-.ex{height:34px}
-.ex .line{top:7px;height:1px;background:var(--ink)}
-.ex .tick{left:50%;top:2px;height:11px;background:var(--stone)}
-.ex .marker{top:1px;margin-left:-7px;width:13px;height:13px;background:var(--foil-dot);box-shadow:0 0 0 2px var(--ivory),0 0 0 3px var(--green)}
-.ex .scale-labels{top:18px;font-size:var(--t-micro)}
 /* mini scale, My Proof */
 .mini{width:96px;height:12px;flex:none}
 .mini .line{top:5px;height:1px;background:var(--ink)}
@@ -210,20 +219,78 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--green);outline-o
 .checking .foot{position:absolute;left:var(--gutter);right:var(--gutter-r);bottom:calc(28px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;gap:12px}
 .checking .foot .label{color:var(--on-green-3);text-align:right}
 
-/* verdict */
-.v-hero{padding:22px var(--gutter-r) 30px var(--gutter);display:flex;flex-direction:column;gap:18px}
+/* verdict (reference/design/v2/Verdict.html, NoDebt.html; Booth.html on desktop) */
+.v-hero{padding:20px var(--gutter-r) 28px var(--gutter);display:flex;flex-direction:column;gap:22px}
 .v-hero header{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.v-hero .meta{text-align:right}
-.v-hero .quote{color:var(--on-green-quote)}
-.verdict{margin-top:6px;font-family:var(--font-display);font-weight:300;font-size:var(--t-verdict);line-height:.95;letter-spacing:-0.02em;color:var(--on-green)}
-.v-hero .ev{margin-top:18px}
-.v-body{padding:26px var(--gutter-r) 0 var(--gutter);display:flex;flex-direction:column;gap:22px}
+.v-hero .mark-green{font-size:1.625rem}
+.v-hero .meta{text-align:right;color:var(--on-green-3)}
+.v-claim{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:1.1875rem;line-height:1.35;color:var(--on-green-2)}
+.v-head{display:flex;flex-direction:column;gap:10px}
+.verdict{font-family:var(--font-display);font-weight:300;font-size:3rem;line-height:1.05;letter-spacing:-0.5px;color:var(--on-green)}
+.verdict em{font-style:italic;font-weight:300}
+.v-meta{font-family:var(--font-mono);font-size:var(--t-label);color:var(--on-green-3)}
+/* the evidence x fit chart */
+.chart{display:flex;gap:8px}
+.chart .fitlab{width:78px;height:240px;flex:none;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;text-align:right;font-family:var(--font-mono);font-size:var(--t-micro);line-height:1.3;color:var(--on-green-3)}
+.chart .on{color:var(--on-green);font-weight:500}
+.chart.need .fitlab{opacity:.4}
+.chart .plotcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.plot{position:relative;height:240px}
+.plot .bg{position:absolute;inset:0;border:1px solid rgba(255,255,255,0.14)}
+.plot .vl{left:50%;top:0;bottom:0;width:1px;background:rgba(233,204,116,0.3)}
+.plot .hl{top:50%;left:0;right:0;height:1px;background:rgba(233,204,116,0.3)}
+.chart.promo .bg,.chart.promo .evlab{opacity:.3}
+.plot .mk{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.18),0 0 28px rgba(233,204,116,0.55)}
+.plot .ghost{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;border:1px solid rgba(233,204,116,0.6)}
+.plot .trail{position:absolute;inset:0;overflow:visible}
+.plot .trail line{stroke:rgba(233,204,116,0.55);stroke-width:1;stroke-dasharray:3 3}
+.chart .evlab{display:flex;font-family:var(--font-mono);font-size:var(--t-micro);line-height:1.3;color:var(--on-green-3)}
+.chart .evlab span{flex:1}
+.chart .evlab span:nth-child(2){text-align:center}
+.chart .evlab span:last-child{text-align:right}
+.chart-note{font-family:var(--font-mono);font-size:var(--t-label);color:var(--on-green-2);text-align:right}
+.v-hero .link.small{min-height:0;color:var(--on-green)}
+/* the booth profile switch */
+.v-update{display:flex;flex-direction:column;gap:8px;padding-top:2px}
+.v-update .note{font-family:var(--font-mono);font-size:var(--t-label);color:var(--foil-text)}
+.v-update p{font-size:var(--t-lead);line-height:1.45;color:var(--on-green-2)}
+.switch{display:flex;flex-direction:column;gap:8px}
+.switch .seg button{min-height:44px;font-size:var(--t-label)}
+.switch.on-dark .label{color:var(--on-green-3)}
+.switch.on-dark .seg{border:1px solid rgba(255,255,255,0.28)}
+.switch.on-dark .seg button{border:0;border-right:1px solid rgba(255,255,255,0.28);color:var(--on-green-2)}
+.switch.on-dark .seg button:last-child{border-right:0}
+.switch.on-dark .seg button[aria-pressed="true"]{background:var(--ivory);color:var(--green);font-weight:500}
+/* the ivory column */
+.v-body{padding:28px var(--gutter-r) 32px var(--gutter);display:flex;flex-direction:column;gap:28px}
+.v-sec2{display:flex;flex-direction:column;gap:8px}
+.v-sec2 .read{font-size:var(--t-lead);line-height:1.5}
+.v-sec2 > .note{font-family:var(--font-mono);font-size:var(--t-label);font-weight:500;color:var(--green)} /* gold never carries text on ivory */
+.hr{height:1px;background:var(--hairline)}
+.keyfig{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:10px;padding:16px 0;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+.keyfig > div,.fig-side{display:flex;flex-direction:column;gap:6px}
+.fig{font-family:var(--font-display);font-weight:300;font-size:var(--t-h1);line-height:1;color:var(--green)}
+.fig.phrase{font-size:1.875rem;line-height:1.1;padding-top:6px}
+.fl{font-family:var(--font-mono);font-size:var(--t-label);line-height:1.4;color:var(--ink)}
+.fo,.src .so{font-family:var(--font-mono);font-size:var(--t-micro);color:var(--stone)}
+.srclab{margin-top:8px}
+.src{display:flex;flex-direction:column;gap:4px;padding:12px 0;border-top:1px solid var(--hairline)}
+.src:last-child{border-bottom:1px solid var(--hairline)}
+.src .sf{font-size:var(--t-body);line-height:1.45}
+.src .sf.q{font-style:italic}
+.src a{align-self:flex-start;font-family:var(--font-mono);font-size:var(--t-label);color:var(--ink);text-decoration:underline;text-decoration-color:var(--foil-solid);text-underline-offset:3px}
+.start p{font-size:var(--t-quote);line-height:1.4;font-weight:300}
 .flags{font-family:var(--font-mono);font-size:var(--t-label);font-weight:500;color:var(--notsup)}
-.v-sec{display:flex;flex-direction:column;gap:10px;padding-top:20px;border-top:1px solid var(--hairline)}
-.v-sec .fit{margin-top:4px}
-.v-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.v-actions .btn{flex:1}
-.v-links{display:flex;gap:18px;flex-wrap:wrap}
+.v-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.v-actions .btn{padding:0 28px}
+.trust{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding-top:14px;border-top:1px solid var(--hairline)}
+.trust .link.small{min-height:0;color:var(--ink);text-align:left;text-underline-offset:3px}
+.desk-only{display:none!important}
+#methodology{scroll-margin-top:calc(var(--nav-h, 0px) + 16px)}
+.meth-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:var(--t-label);font-variant-numeric:tabular-nums}
+.meth-table th,.meth-table td{padding:10px 0;border-top:1px solid var(--hairline);text-align:left;vertical-align:top;font-weight:400;color:var(--ink)}
+.meth-table th{width:48%;padding-right:12px;color:var(--stone)}
+.meth-table tr:last-child th,.meth-table tr:last-child td{border-bottom:1px solid var(--hairline)}
 .fade-up{animation:fadeup 420ms ease-out both}
 .fade-up.late{animation-delay:120ms}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -285,46 +352,8 @@ html.booth .booth-only{display:flex!important}
 
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--green);color:#FFFFFF;padding:12px 18px;font-family:var(--font-mono);font-size:var(--t-control);box-shadow:inset 0 -2px 0 var(--foil-solid);max-width:calc(100% - 44px)}
 
-/* welcome cover: all velvet with a gold grid. Crosshairs glide in and lock onto a foil dot ("fits you") while popular
-   tips flare up and dim to noise. Final positions are the base styles, so reduced motion shows the finished frame.
-   Phones keep the art above the wordmark; desktop moves it to the right half. */
-#v-welcome{position:relative;overflow:hidden;color:var(--on-green)}
-#v-welcome .welcome-hero{background:none}
-#v-welcome .welcome-hero::before{display:none}
-.welcome-body{position:relative}
-.cover-art .noise .dsk{display:none}
-#v-welcome .lead,#v-welcome .label,#v-welcome .ex .scale-labels{color:var(--on-green-2)}
-#v-welcome .ex-fig{border-top-color:rgba(255,255,255,0.16)}
-#v-welcome .quote{color:var(--on-green-quote)}
-#v-welcome .ex .line{height:2px;background:var(--foil-line)}
-#v-welcome .ex .tick{background:var(--on-green-2)}
-#v-welcome .ex .marker{box-shadow:0 0 0 4px rgba(233,204,116,0.22)}
-#v-welcome .ex .scale-labels .on,#v-welcome .link{color:var(--on-green)}
-#v-welcome .disclaimer{color:var(--on-green-3)}
-#v-welcome :focus-visible{outline-color:var(--foil-text)}
-
-.cover-art{--cx:72%;--cy:92px;--vline:240px;--grid-mask:linear-gradient(180deg,#000 140px,transparent 250px);--sx:22vw;--sy:56px;--dm:1;display:block;position:absolute;inset:0;background:var(--velvet);overflow:hidden}
-.cover-art::after{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none}
-.cover-art > *{position:absolute}
-.cover-art .grid{inset:0;background-image:linear-gradient(rgba(201,162,39,0.16) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,0.16) 1px,transparent 1px);background-size:48px 48px;
-  -webkit-mask-image:var(--grid-mask);mask-image:var(--grid-mask);animation:cover-fade 2.8s ease-out both}
-/* the noise: popular tips flare up while the crosshairs search, then dim once they lock on */
-.cover-art .noise{inset:0}
-.cover-art .noise span{position:absolute;font-family:var(--font-display);font-style:italic;font-weight:300;line-height:1;left:var(--mx);top:var(--my);font-size:.95rem;white-space:nowrap;color:var(--on-green-3);opacity:.45;
-  animation:cover-noise 5s var(--d) ease-out both,cover-drift 14s var(--d) ease-in-out infinite alternate}
-.cover-art .glow{inset:0;background:radial-gradient(circle at var(--cx) var(--cy),rgba(243,226,154,0.22),rgba(243,226,154,0.06) 22%,transparent 40%);
-  animation:cover-fade 1.6s 4.8s ease-out both,cover-breathe 6s 6.4s ease-in-out infinite alternate}
-.cover-art .cross-v{top:0;height:var(--vline);left:var(--cx);width:1px;background:linear-gradient(180deg,transparent,#B8912F 22%,#F3E29A var(--cy),#C9A227 70%,transparent);
-  animation:cover-search-x 4.4s .6s cubic-bezier(.2,.8,.2,1) both}
-.cover-art .cross-h{left:0;right:0;top:var(--cy);height:1px;background:linear-gradient(90deg,transparent 40%,#B8912F 58%,#F3E29A var(--cx),#C9A227 88%,transparent);
-  animation:cover-search-y 4.4s .9s cubic-bezier(.2,.8,.2,1) both}
-.cover-art .dot,.cover-art .ring{left:var(--cx);top:var(--cy);width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%}
-.cover-art .dot{background:var(--foil-dot);box-shadow:0 0 0 5px rgba(233,204,116,0.22),0 0 24px rgba(243,226,154,0.6);animation:cover-pop .9s 5.2s ease-out both}
-.cover-art .ring{border:1px solid var(--foil-solid);opacity:0;animation:cover-ping 3.6s 6s ease-out infinite}
-.cover-art .tag{left:calc(var(--cx) + 20px);top:calc(var(--cy) - 30px);font-family:var(--font-mono);font-size:var(--t-label);color:var(--foil-text);animation:cover-fade 1.2s 5.8s ease-out both}
-
-/* desktop: top nav, split screens for welcome and verdict, wider reading columns. The mockups are phone-only;
-   this reuses their tokens and pieces. */
+/* desktop: top nav, split screens for welcome and verdict, wider reading columns. The v2 Booth.html mockup sets the
+   desktop verdict; the other desktop layouts reuse the phone mockups' tokens and pieces. */
 @media (min-width: 960px){
   :root{--nav-h:68px;--gutter:56px;--gutter-r:56px}
   .app{max-width:none}
@@ -335,31 +364,29 @@ html.booth .booth-only{display:flex!important}
   header.top{display:none}
   .toast{bottom:32px}
 
-  /* welcome: everything in the left column, the cover art on the right */
-  #v-welcome{position:relative;overflow:hidden;justify-content:center;gap:30px;padding:56px 64px;min-height:100vh;min-height:100dvh;color:var(--on-green)}
-  .welcome-hero{background:none;height:auto;flex:none;padding:0;gap:18px;max-width:46%}
-  .welcome-hero::before{display:none}
-  .hero-mark{font-size:clamp(6rem,16vh,11rem)}
-  .welcome-hero p{font-size:clamp(1.875rem,4.6vh,2.5rem)}
-  .welcome-body{position:relative;flex:none;padding:0;gap:18px;width:min(46%,500px)}
-  .welcome-body > .disclaimer{margin-top:4px;padding-top:0}
-  .cover-art{--cx:73%;--cy:42%;--sx:16vw;--sy:24vh;--dm:1.5;--vline:100%;--grid-mask:linear-gradient(90deg,transparent 30%,#000 62%)}
-  .cover-art .noise span{left:var(--x);top:var(--y);font-size:var(--fs)}
-  .cover-art .noise .dsk{display:inline}
+  /* welcome: the words on the left, the chart on the right */
+  #v-welcome{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);grid-template-rows:auto 1fr auto;column-gap:80px;row-gap:32px;padding:44px 64px 40px}
+  .w-top{grid-column:1/-1}
+  .w-top .mark-green{font-size:1.875rem}
+  .w-text{grid-column:1;grid-row:2;align-self:center;margin-top:0;gap:20px}
+  .w-text h1{font-size:clamp(3.5rem,5.6vw,5.5rem);line-height:1.04;letter-spacing:-1px}
+  .w-text p{font-size:var(--t-quote);max-width:520px}
+  .w-actions{grid-column:1;grid-row:3;align-items:flex-start;width:100%;max-width:460px;margin-top:0}
+  .w-actions .disclaimer{text-align:left}
+  .w-chart{grid-column:2;grid-row:2/4;height:auto;min-height:440px;margin:28px 0 26px}
+  .w-chart .pt{font-size:1rem}
+  .w-chart .pt i{width:7px;height:7px}
+  .w-chart .lit{right:5%;top:10%;font-size:1.125rem}
+  .w-chart .lit b{width:18px;height:18px}
+  .w-chart .ax{font-size:var(--t-label)}
 
-  /* check: the tip on the left, the details on the right */
-  #checkForm{width:100%;max-width:1160px;margin:0 auto;padding-top:48px;padding-bottom:56px}
-  #checkForm .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:64px;align-items:start}
-  textarea.tip{min-height:220px}
+  /* check: one centered column */
+  #checkForm{width:100%;max-width:720px;margin:0 auto;padding-top:48px;padding-bottom:56px}
+  textarea.tip{height:180px}
 
-  /* verdict: the evidence stays in view on the left while you read the right */
-  #verdictOut > article{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:1}
-  .v-hero{position:sticky;top:var(--nav-h);align-self:start;min-height:calc(100vh - var(--nav-h));min-height:calc(100dvh - var(--nav-h));justify-content:center;gap:22px}
-  .v-hero header{justify-content:flex-start}
+  /* verdict between 960 and 1024 keeps the phone layout in a centered column */
+  #verdictOut{width:100%;max-width:760px;margin:0 auto}
   .v-hero header .mark-green{display:none}
-  .v-hero .meta{text-align:left}
-  .verdict{font-size:4.75rem}
-  .v-body{padding-top:56px;max-width:680px}
 
   /* reading pages */
   #profileForm,#v-proof > .pad,#v-how > .pad,.state{width:100%;max-width:760px;margin:0 auto;padding-top:48px;padding-bottom:64px}
@@ -370,14 +397,49 @@ html.booth .booth-only{display:flex!important}
   .checking .status p:first-child{font-size:3.25rem}
 }
 
-@keyframes cover-fade{from{opacity:0}}
-@keyframes cover-breathe{from{opacity:1}to{opacity:.6}}
-@keyframes cover-search-x{0%{transform:translateX(calc(var(--sx) * 1.4));opacity:0}15%{opacity:1}100%{transform:none}}
-@keyframes cover-search-y{0%{transform:translateY(calc(var(--sy) * 1.4));opacity:0}15%{opacity:1}100%{transform:none}}
-@keyframes cover-noise{0%{opacity:0}20%{opacity:1;color:var(--on-green-2)}75%{opacity:1;color:var(--on-green-2)}100%{opacity:.45}}
-@keyframes cover-drift{to{transform:translate(calc(var(--dx) * var(--dm)),calc(var(--dy) * var(--dm)))}}
-@keyframes cover-pop{from{transform:scale(0)}}
-@keyframes cover-ping{from{transform:scale(1);opacity:.8}to{transform:scale(4.5);opacity:0}}
+/* desktop verdict (reference/design/v2/Booth.html): velvet panel left, the reading on the right */
+@media (min-width: 1024px){
+  .phone-only{display:none!important}
+  span.desk-only{display:inline!important}
+  .fig-side.desk-only,.switch.desk-only,.meth-row.desk-only{display:flex!important}
+  .v-sec2 > .note.desk-only{display:block!important}
+  #verdictOut{max-width:none}
+  #verdictOut > article.vd{display:flex;flex:1;align-items:stretch}
+  .v-hero{width:min(840px,58%);flex:none;position:sticky;top:var(--nav-h);align-self:flex-start;height:calc(100vh - var(--nav-h));height:calc(100dvh - var(--nav-h));overflow-y:auto;padding:48px 56px;gap:28px}
+  .v-hero .meta{text-align:left;font-size:var(--t-control)}
+  .v-claim{font-size:1.5rem;line-height:1.3}
+  .v-head{gap:14px}
+  .verdict{font-size:5.25rem;line-height:1;letter-spacing:-1px}
+  .v-meta{font-size:var(--t-button)}
+  .chart{margin-top:auto;gap:14px}
+  .chart .fitlab{width:110px;height:300px;font-size:var(--t-control)}
+  .chart .plotcol{gap:12px}
+  .plot{height:300px}
+  .chart .evlab,.chart-note{font-size:var(--t-control)}
+  .plot .mk{width:22px;height:22px;margin:-11px 0 0 -11px;box-shadow:0 0 0 7px rgba(233,204,116,0.18),0 0 40px rgba(233,204,116,0.55)}
+  .v-body{flex:1;min-width:0;padding:48px 56px;gap:26px}
+  .v-body .label{font-size:var(--t-control)}
+  .switch{gap:10px}
+  .switch .seg button{min-height:52px;font-size:var(--t-control)}
+  .ev-row{display:flex;gap:24px;align-items:flex-start}
+  .fig-side{gap:4px;min-width:150px;max-width:170px;flex:none}
+  .fig-side .fig{font-size:3.25rem}
+  .fig-side .fl{font-size:var(--t-micro);color:var(--stone)}
+  .v-sec2 .read{font-size:1.1875rem;line-height:1.45}
+  .v-sec2.fitsec .read{font-size:var(--t-quote)}
+  .srclab{display:none}
+  .srcs{margin-top:6px}
+  .src{flex-direction:row;justify-content:space-between;align-items:baseline;gap:16px;padding:9px 0}
+  .src .sf{display:none}
+  .src .so{font-size:var(--t-label)}
+  .meth-row{margin-top:auto;flex-direction:column;gap:10px;padding-top:20px;border-top:1px solid var(--hairline)}
+  .meth-title{align-self:flex-start;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+  .meth-cells{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  .meth-cells div{display:flex;flex-direction:column;gap:4px}
+  .mv{font-size:var(--t-h3);color:var(--green)}
+  .ml{font-size:var(--t-label);color:var(--stone)}
+}
+
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -388,29 +450,29 @@ html.booth .booth-only{display:flex!important}
 <div class="app" id="app">
 <main>
 
-  <!-- 1. Welcome (F-Welcome) -->
+  <!-- 1. Welcome (reference/design/v2/Welcome.html) -->
   <section class="view" id="v-welcome" aria-labelledby="h-welcome">
-    <div class="cover-art" aria-hidden="true"><div class="grid"></div><div class="noise"><span style="--x:54%;--y:13%;--fs:1.15rem;--mx:6%;--my:14px;--dx:-14px;--dy:8px;--d:0.1s">cold plunge every morning</span><span style="--x:79%;--y:8%;--fs:1.0rem;--mx:56%;--my:34px;--dx:10px;--dy:-6px;--d:0.25s">10,000 steps a day</span><span style="--x:56%;--y:27%;--fs:1.25rem;--mx:8%;--my:62px;--dx:12px;--dy:10px;--d:0.4s">invest in VTI</span><span class="dsk" style="--x:76%;--y:22%;--fs:0.95rem;--dx:-10px;--dy:8px;--d:0.2s">mouth taping for better sleep</span><span style="--x:52%;--y:55%;--fs:1.15rem;--mx:4%;--my:110px;--dx:14px;--dy:-8px;--d:0.35s">slugging for glass skin</span><span style="--x:88%;--y:50%;--fs:1.0rem;--mx:82%;--my:132px;--dx:-8px;--dy:-10px;--d:0.5s">fast 16:8</span><span style="--x:60%;--y:69%;--fs:1.2rem;--mx:40%;--my:156px;--dx:-12px;--dy:6px;--d:0.15s">buy the dip</span><span style="--x:79%;--y:62%;--fs:1.05rem;--mx:6%;--my:188px;--dx:10px;--dy:10px;--d:0.45s">max out your 401(k)</span><span style="--x:54%;--y:86%;--fs:1.05rem;--mx:44%;--my:190px;--dx:12px;--dy:-8px;--d:0.3s">rent is throwing money away</span><span class="dsk" style="--x:74%;--y:84%;--fs:1.0rem;--dx:-14px;--dy:-6px;--d:0.55s">side hustle for passive income</span><span class="dsk" style="--x:82%;--y:34%;--fs:0.95rem;--dx:8px;--dy:12px;--d:0.6s">never use credit cards</span><span class="dsk" style="--x:84%;--y:94%;--fs:0.95rem;--dx:-10px;--dy:-8px;--d:0.05s">retinol every night</span></div><div class="glow"></div><div class="cross-v"></div><div class="cross-h"></div><span class="ring"></span><span class="dot"></span><span class="tag">fits you</span></div>
-    <div class="on-green welcome-hero">
-      <h1 id="h-welcome" class="hero-mark foil-text">verity</h1>
-      <p><span class="nw">Less <em>noise</em>. More <em>truth</em>,</span> <span class="nw">tailored to <em>you</em>.</span></p>
+    <div class="w-top"><span class="mark-green" aria-hidden="true">verity</span><span class="label">Skincare · Wellness · Money</span></div>
+    <div class="w-chart" aria-hidden="true">
+      <i class="vl"></i><i class="hl"></i>
+      <span class="pt" style="left:4.1%;top:30.8%"><i></i>detox tea, every morning</span>
+      <span class="pt" style="left:35.3%;top:45.4%"><i></i>a gallon of water a day</span>
+      <span class="pt" style="left:55.9%;top:64.6%"><i></i>retinol every night</span>
+      <span class="pt" style="left:5.9%;top:71.5%"><i></i>no sunscreen on cloudy days</span>
+      <span class="pt" style="left:10%;top:85.4%"><i></i>this coin will 10x by May</span>
+      <span class="pt lit">pay off the card first<b></b></span>
+      <span class="ax" style="left:10px;bottom:-22px">Not supported</span>
+      <span class="ax" style="right:10px;bottom:-22px">Well supported</span>
+      <span class="ax" style="right:10px;top:-20px">For you</span>
     </div>
-    <div class="welcome-body">
-      <p class="lead">Paste a tip you saw about skincare, wellness or money. Verity checks it against the evidence, then checks if it fits you.</p>
-      <figure class="ex-fig" aria-label="Example: a tip placed on the evidence scale at Not supported">
-        <span class="quote" style="font-size:var(--t-lead)">“You don't need sunscreen on cloudy days.”</span>
-        <div class="scale ex" aria-hidden="true">
-          <div class="line"></div><span class="tick"></span>
-          <span class="marker" style="left:7%"></span>
-          <div class="scale-labels"><span class="on">Not supported</span><span>Mixed evidence</span><span>Well supported</span></div>
-        </div>
-        <figcaption class="label">Example check</figcaption>
-      </figure>
-      <div class="stack" style="gap:6px">
-        <button type="button" class="btn hero tall" data-go="check">Check a tip</button>
-        <button type="button" class="link center" data-go="profile">Set up my profile, 60 seconds</button>
-      </div>
-      <p class="disclaimer">Verity explains evidence. It isn't medical, legal or financial advice.</p>
+    <div class="w-text">
+      <h1 id="h-welcome"><span class="sr">Verity. </span>Less <em>noise</em>.<br>More <em>truth</em>,<br>tailored to <em class="foil-text">you.</em></h1>
+      <p>Verity reviews the skincare, wellness and money advice in your feed against the evidence, and against your life.</p>
+    </div>
+    <div class="w-actions">
+      <button type="button" class="btn hero tall" data-go="check">Review advice</button>
+      <button type="button" class="link center" data-go="profile">Set up your profile, 60 seconds</button>
+      <p class="disclaimer">Your proof, not their posts. Not medical, legal or financial advice.</p>
     </div>
   </section>
 
@@ -420,7 +482,7 @@ html.booth .booth-only{display:flex!important}
     <form id="profileForm" class="pad stack" style="gap:22px" novalidate>
       <div class="stack" style="gap:10px">
         <h1 id="h-profile" class="h1">Your profile</h1>
-        <p class="muted">Every field is optional and takes about 60 seconds. Verity uses what you fill in to judge whether a tip fits you. It stays on this device.</p>
+        <p class="muted">Every field is optional and takes about 60 seconds. Verity uses what you fill in to judge whether advice fits you. It stays on this device.</p>
       </div>
       <div class="sect">
         <h2 class="h3">Skin and beauty</h2>
@@ -458,42 +520,37 @@ html.booth .booth-only{display:flex!important}
     </form>
   </section>
 
-  <!-- 3. Check a tip (F-Check) -->
+  <!-- 3. Check (reference/design/v2/Check.html) -->
   <section class="view" id="v-check" hidden aria-labelledby="h-check">
     <header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button><span class="label booth-only">Booth</span></header>
-    <form id="checkForm" class="pad stack" style="gap:22px;flex:1" novalidate>
-      <h1 id="h-check" class="h1"><span class="no-booth">Check a tip</span><span class="booth-only">Paste a tip you've seen this week.</span></h1>
+    <form id="checkForm" class="pad stack" novalidate>
+      <h1 id="h-check" class="h-screen">What advice would you like reviewed?</h1>
       <div class="demo booth-only" role="group" aria-labelledby="demoLab1">
-        <span class="label-strong" id="demoLab1">Demo profile</span>
+        <span class="label" id="demoLab1">Same advice, different life. Switch profiles to see the fit change.</span>
         <div class="seg demo-seg"></div>
       </div>
-      <div class="cols">
-      <div class="col">
       <div class="field">
-        <label class="label-strong" for="tip">Paste the tip or caption.</label>
-        <textarea class="tip" id="tip" rows="5" maxlength="2000" placeholder="For example: You don't need sunscreen on cloudy days."></textarea>
+        <label class="label" for="tip">Paste it here, as you saw it</label>
+        <textarea class="tip" id="tip" rows="4" maxlength="2000" placeholder="“You don’t need sunscreen on cloudy days.”"></textarea>
+        <div class="cat-line"><span id="catState">Category: detected as you type</span><button type="button" class="link small" id="catToggle" aria-expanded="false" aria-controls="catBox">change</button></div>
+        <fieldset id="catBox" hidden><legend class="sr">Category</legend><div class="seg" id="catSeg"></div></fieldset>
       </div>
       <div class="stack">
-        <span class="label" style="padding-bottom:6px">Or try one of these</span>
+        <span class="label" style="padding-bottom:6px">Or start with an example</span>
         <div class="examples" id="examples"></div>
       </div>
-      </div>
-      <div class="col">
-      <fieldset>
-        <legend>Category <span class="label" id="catState"></span></legend>
-        <div class="seg" id="catSeg"></div>
-      </fieldset>
-      <fieldset><legend>Where did you see it?</legend><div class="chips" id="srcSeg"></div></fieldset>
-      <fieldset><legend>Was it sponsored?</legend><div class="seg" id="sponSeg"></div></fieldset>
-      <button class="btn tall" type="submit" id="checkBtn">Check this tip</button>
+      <button class="btn tall" type="submit" id="checkBtn">Review this advice</button>
       <p class="flags" id="checkErr" role="alert" hidden></p>
+      <div><button type="button" class="link small" id="detailsToggle" aria-expanded="false" aria-controls="detailsBox">Add source and sponsorship (optional)</button></div>
+      <div id="detailsBox" class="stack" style="gap:20px" hidden>
+        <fieldset><legend>Where did you see it?</legend><div class="chips" id="srcSeg"></div></fieldset>
+        <fieldset><legend>Was it sponsored?</legend><div class="seg" id="sponSeg"></div></fieldset>
+      </div>
       <p class="disclaimer">Verity explains evidence. It isn't medical, legal or financial advice.</p>
-      </div>
-      </div>
     </form>
   </section>
 
-  <!-- 4. Verdict (F-Verdict); checking (F-Checking) is drawn as an overlay -->
+  <!-- 4. Verdict (reference/design/v2/Verdict.html, Booth.html, NoDebt.html); checking (F-Checking) is drawn as an overlay -->
   <section class="view" id="v-verdict" hidden aria-labelledby="h-verdict">
     <div id="verdictOut" aria-live="polite" class="stack" style="flex:1"></div>
   </section>
@@ -516,16 +573,16 @@ html.booth .booth-only{display:flex!important}
     <div class="pad stack" style="gap:22px">
       <div class="prose">
         <h1 id="h-how" class="h1">How Verity works</h1>
-        <p>Fact-checkers ask whether a tip is true. Verity also asks whether it's true for you, and shows its reasoning every time.</p>
+        <p>Fact-checkers ask whether advice is true. Verity also asks whether it's true for you, and shows its reasoning every time.</p>
       </div>
       <div class="sect prose">
-        <h2 class="h3">What it checks</h2>
+        <h2 class="h3">What it reviews</h2>
         <ul>
-          <li>What the tip claims, in one line.</li>
+          <li>What the advice claims, in one line.</li>
           <li>How well mainstream expert guidance supports it: dermatology, medicine, public health and basic consumer finance.</li>
           <li>Red flags, like guaranteed results, urgency or fear.</li>
           <li>Whether it fits the profile you filled in, and which fields it used.</li>
-          <li>A safer next step, and when to ask a professional.</li>
+          <li>A good place to start, and when to ask a professional.</li>
         </ul>
       </div>
       <div class="sect prose">
@@ -534,7 +591,7 @@ html.booth .booth-only{display:flex!important}
           <li>Diagnose a condition or suggest a dose.</li>
           <li>Recommend a brand, product, stock, coin or fund.</li>
           <li>Give personal investment, tax or legal advice. It explains general principles.</li>
-          <li>Cite live studies. It names the kind of authority behind a verdict instead, so it never makes up a source.</li>
+          <li>Cite anything outside its source library. Every source it shows was checked by hand, and the AI only picks from that list, so it never makes up a source, a quote or a number.</li>
           <li>Judge creators. It critiques the claim, never the person.</li>
         </ul>
       </div>
@@ -542,9 +599,14 @@ html.booth .booth-only{display:flex!important}
         <h2 class="h3">What the labels mean</h2>
         <div class="legend" id="legend"></div>
       </div>
+      <div class="sect" id="methodology" hidden>
+        <h2 class="h3">Methodology</h2>
+        <p class="muted">Before each release, Verity reviews 20 test claims with known answers, three times over. These are the latest results.</p>
+        <table class="meth-table"><tbody id="methRows"></tbody></table>
+      </div>
       <div class="sect prose">
         <h2 class="h3">Where your data lives</h2>
-        <p>Your profile and My Proof stay in this browser on this device. When you check a tip, the tip and only the profile fields you filled in are sent to Claude to write the verdict. Verity has no analytics and no tracking.</p>
+        <p>Your profile and My Proof stay in this browser on this device. When you ask for a review, the advice and only the profile fields you filled in are sent to Claude to write the verdict. Verity has no analytics and no tracking.</p>
         <div><button class="link" type="button" id="clearBtn2">Clear my data</button></div>
       </div>
       <div class="sect prose">
@@ -575,7 +637,6 @@ html.booth .booth-only{display:flex!important}
 
 /* ---------- constants ---------- */
 const SOFT_HINT_MS = 10000, HARD_TIMEOUT_MS = 35000;
-const SETTLE_MS = 480;
 const STORE_KEY = "verity.v1";
 
 const EVIDENCE = {
@@ -612,15 +673,15 @@ const SPONSORED = ["Yes","No","Not sure"];
 
 const DEMO_PROFILES = {
   none:{label:"No profile", profile:null},
-  debt:{label:"Maya, has card debt", profile:{skin_type:"Sensitive", skin_sensitivities:"fragrance", wellness_goals:["Sleep better"], life_stage:"Early career", high_interest_debt:"Yes", emergency_savings:"No", money_goal:"Pay off debt"}},
-  nodebt:{label:"Maya, no debt", profile:{skin_type:"Sensitive", skin_sensitivities:"fragrance", wellness_goals:["Sleep better"], life_stage:"Early career", high_interest_debt:"No", emergency_savings:"Yes", money_goal:"Start investing"}}
+  debt:{label:"Maya, in debt", profile:{skin_type:"Sensitive", skin_sensitivities:"fragrance", wellness_goals:["Sleep better"], life_stage:"Early career", high_interest_debt:"Yes", emergency_savings:"No", money_goal:"Pay off debt"}},
+  nodebt:{label:"Maya, debt free", profile:{skin_type:"Sensitive", skin_sensitivities:"fragrance", wellness_goals:["Sleep better"], life_stage:"Early career", high_interest_debt:"No", emergency_savings:"Yes", money_goal:"Start investing"}}
 };
 
 // Test claims 1, 14 and 17 (the full set lives in lib/verity.js). Short text is what the list shows.
 const EXAMPLES = [
-  {short:"Chemicals in sunscreen are worse for you than a sunburn.", text:"Chemicals in sunscreen are worse for you than a sunburn."},
+  {short:"Chemicals in sunscreen are worse than a sunburn.", text:"Chemicals in sunscreen are worse for you than a sunburn."},
   {short:"This coin is guaranteed to 10x by next month.", text:"This coin is guaranteed to 10x by next month. Get in before it's too late."},
-  {short:"Pay off credit card debt before investing extra money.", text:"Pay off high-interest credit card debt before investing extra money."}
+  {short:"Pay off card debt before investing extra money.", text:"Pay off high-interest credit card debt before investing extra money."}
 ];
 
 const ICON = {
@@ -659,7 +720,9 @@ const S = {
   last:null,      // {req, data, savedId, n}
   ctl:null,
   filter:"all",
-  sweepPos:50
+  sweepPos:50,
+  switchFrom:null, // {pos, fit, demo} before a booth profile switch
+  meth:null        // published eval results, or null
 };
 try{ localStorage.setItem("verity.probe","1"); localStorage.removeItem("verity.probe"); }catch(e){ storageOK = false; }
 
@@ -757,23 +820,46 @@ async function copyText(text, fallbackEl){
   }
 }
 
-/* ---------- scales ---------- */
+/* ---------- the evidence x fit chart (v2) ---------- */
+// Evidence runs left to right, fit bottom to top. Positions are percentages of the plot box.
 const EV_LABELS = ["not_supported","mixed","well_supported"];
-function evidenceScale(verdict, startPos){
-  const promo = verdict === "promotional";
-  const pos = EVIDENCE[verdict].pos;
-  return '<figure class="scale ev'+(promo?" promo":"")+'" role="img" aria-label="Evidence: '+esc(lc(EVIDENCE[verdict].label))+'">'+
-    '<div class="line"></div><span class="tick" style="left:0"></span><span class="tick" style="left:50%"></span><span class="tick" style="right:0"></span>'+
-    '<div class="pin" data-pos="'+pos+'" style="left:'+(startPos == null ? pos : startPos)+'%"><b>This tip</b><span class="marker"></span></div>'+
-    '<div class="scale-labels" aria-hidden="true">'+EV_LABELS.map(k => '<span'+(k===verdict?' class="on"':'')+'>'+EVIDENCE[k].label+'</span>').join("")+'</div>'+
-    (promo ? '<span class="promo-note label">Mainly selling something.</span>' : '')+
-  '</figure>';
+const EV_X = {not_supported:7, mixed:50, well_supported:93, promotional:100};
+const FIT_Y = {for_you:7, maybe:50, not_for_you:93, need_profile:50};
+const MOVE_MS = 600, SETTLE_MS = 480;
+function markerPos(ev, fit){ return {x: EV_X[ev], y: ev === "promotional" ? 50 : FIT_Y[fit]}; }
+function chartLabel(d, prevFit){
+  const ev = d.evidence.verdict, fit = d.fit.verdict;
+  let t = "Evidence: " + lc(EVIDENCE[ev].label) + (ev === "promotional" ? ", mainly selling something." : ".");
+  t += fit === "need_profile" ? " Fit: not checked without a profile." : " Fit: " + lc(FIT[fit].label) + ".";
+  if (prevFit && prevFit !== fit && FIT[prevFit] && prevFit !== "need_profile") t += " Moved from " + lc(FIT[prevFit].label) + ".";
+  return t;
 }
-function fitScale(verdict){
-  return '<figure class="scale fit" role="img" aria-label="Fit: '+esc(lc(FIT[verdict].label))+'">'+
-    '<div class="line"></div><span class="tick"></span><span class="marker" style="left:'+FIT[verdict].pos+'%"></span>'+
-    '<div class="scale-labels" aria-hidden="true">'+["not_for_you","maybe","for_you"].map(k => '<span'+(k===verdict?' class="on"':'')+'>'+FIT[k].label+'</span>').join("")+'</div>'+
-  '</figure>';
+// from: where the marker starts (the old position after a profile switch, or the sweep on first load).
+// ghost: true leaves a ring and a dashed trail at the old position.
+function chartView(d, from, ghost){
+  const ev = d.evidence.verdict, fit = d.fit.verdict, promo = ev === "promotional", need = fit === "need_profile";
+  const p = markerPos(ev, fit), start = from || p;
+  const moved = ghost && from && (from.x !== p.x || from.y !== p.y);
+  let h = '<div class="chart'+(promo?" promo":"")+(need?" need":"")+'" role="img" aria-label="'+esc(chartLabel(d, ghost && S.switchFrom ? S.switchFrom.fit : null))+'">';
+  h += '<div class="fitlab" aria-hidden="true">'+["for_you","maybe","not_for_you"].map(k => '<span'+(k===fit && !promo ? ' class="on"' : '')+'>'+FIT[k].label+'</span>').join("")+'</div>';
+  h += '<div class="plotcol"><div class="plot" aria-hidden="true"><div class="bg"><i class="vl"></i><i class="hl"></i></div>';
+  if (moved){
+    h += '<svg class="trail" width="100%" height="100%"><line x1="'+from.x+'%" y1="'+from.y+'%" x2="'+p.x+'%" y2="'+p.y+'%"/></svg>'+
+         '<span class="ghost" style="left:'+from.x+'%;top:'+from.y+'%"></span>';
+  }
+  h += '<span class="mk" data-x="'+p.x+'" data-y="'+p.y+'" style="left:'+start.x+'%;top:'+start.y+'%"></span></div>';
+  h += '<div class="evlab" aria-hidden="true">'+EV_LABELS.map(k => '<span'+(k===ev ? ' class="on"' : '')+'>'+EVIDENCE[k].label+'</span>').join("")+'</div></div></div>';
+  if (promo) h += '<p class="chart-note">Mainly selling something.</p>';
+  else if (need && !S.booth) h += '<div><button type="button" class="link small" data-go="profile">Add your profile to check fit</button></div>';
+  return h;
+}
+// Glide the marker from where it was drawn to where it belongs.
+function settleMarker(ms){
+  const mk = $("#verdictOut .mk"); if (!mk) return;
+  const to = () => { mk.style.left = mk.dataset.x + "%"; mk.style.top = mk.dataset.y + "%"; };
+  if (reduceMotion()) return to();
+  mk.style.transition = "left "+ms+"ms ease-out, top "+ms+"ms ease-out";
+  requestAnimationFrame(() => requestAnimationFrame(to));
 }
 function miniScale(verdict){
   return '<div class="scale mini'+(verdict==="promotional"?" promo":"")+'" aria-hidden="true"><div class="line"></div><span class="marker" style="left:'+EVIDENCE[verdict].pos+'%"></span></div>';
@@ -851,10 +937,15 @@ wireClear($("#clearBtn")); wireClear($("#clearBtn2"));
 function renderCheckControls(){
   const d = S.draft;
   segment($("#catSeg"), ["beauty","wellness","money"].map(v => ({value:v,label:CATS[v]})), d.category, (v) => { d.category = v; d.catOverride = true; renderCheckControls(); });
-  $("#catState").textContent = d.catOverride ? "· you picked" : (d.category ? "· detected" : "· detected as you type");
+  $("#catState").textContent = d.category ? "Category: " + CATS[d.category] + (d.catOverride ? " (you picked)" : "") : "Category: detected as you type";
   segment($("#srcSeg"), SOURCES, d.source, (v) => { d.source = d.source === v ? "" : v; renderCheckControls(); });
   segment($("#sponSeg"), SPONSORED, d.sponsored, (v) => { d.sponsored = d.sponsored === v ? "" : v; renderCheckControls(); });
 }
+function wireToggle(btn, box){
+  btn.addEventListener("click", () => { const open = box.hidden; box.hidden = !open; btn.setAttribute("aria-expanded", open ? "true" : "false"); });
+}
+wireToggle($("#catToggle"), $("#catBox"));
+wireToggle($("#detailsToggle"), $("#detailsBox"));
 function renderExamples(){
   const box = $("#examples"); box.innerHTML = "";
   for (const ex of EXAMPLES){
@@ -868,8 +959,13 @@ function renderExamples(){
 function renderDemo(){
   $$(".demo-seg").forEach(el => segment(el, Object.keys(DEMO_PROFILES).map(k => ({value:k,label:DEMO_PROFILES[k].label})), S.demo, (v) => {
     if (S.demo === v) return;
+    const was = S.demo, d = S.last && S.last.data;
     S.demo = v; renderDemo();
-    if (S.view === "verdict" && S.last && S.last.req) runCheck({...S.last.req, profile: profileForRequest()}, true);
+    if (S.view === "verdict" && S.last && S.last.req){
+      // Remember where the marker was, so the new verdict can show the move.
+      S.switchFrom = d && d.status === "ok" ? {pos: markerPos(d.evidence.verdict, d.fit.verdict), fit: d.fit.verdict, demo: was} : null;
+      runCheck({...S.last.req, profile: profileForRequest()}, true);
+    }
   }));
 }
 function onTipInput(){
@@ -882,8 +978,9 @@ $("#tip").addEventListener("input", onTipInput);
 $("#checkForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const tip = $("#tip").value.trim();
-  if (tip.length < 3){ const er = $("#checkErr"); er.textContent = "Paste a tip first, or tap an example."; er.hidden = false; $("#tip").focus(); return; }
+  if (tip.length < 3){ const er = $("#checkErr"); er.textContent = "Paste the advice first, or pick an example."; er.hidden = false; $("#tip").focus(); return; }
   const d = S.draft;
+  S.switchFrom = null;
   runCheck({tip, source:d.source, sponsored:d.sponsored, category:d.category, catOverride:d.catOverride, profile: profileForRequest()}, false);
 });
 
@@ -901,10 +998,10 @@ function showChecking(req, n){
   const basis = BASIS_HINT[req.category] || "expert guidance";
   el.innerHTML = '<div class="inner">'+
     '<div class="drift" aria-hidden="true">'+drift+'</div>'+
-    '<header><span class="mark-green" aria-hidden="true">verity</span><span class="meta">Check Nº '+n+'</span></header>'+
+    '<header><span class="mark-green" aria-hidden="true">verity</span><span class="meta">Nº '+n+'</span></header>'+
     '<div class="scale sweep" aria-hidden="true"><div class="line"></div><div class="trail" id="sweepTrail"></div><span class="marker" id="sweepMarker" style="left:50%"></span>'+
       '<div class="scale-labels"><span>Not supported</span><span>Mixed evidence</span><span>Well supported</span></div></div>'+
-    '<div class="status" role="status"><p id="loadMsg">Checking the evidence</p><p id="loadSub">Comparing this tip with '+esc(basis)+(req.profile ? ' and your profile.' : '.')+'</p></div>'+
+    '<div class="status" role="status"><p id="loadMsg">Reading the evidence</p><p id="loadSub">Comparing this advice with '+esc(basis)+(req.profile ? ', then with your situation.' : '.')+'</p></div>'+
     '<div class="foot"><button type="button" class="link" id="stopBtn">Stop</button><span class="label">The marker sweeps until the verdict lands</span></div>'+
   '</div>';
   el.hidden = false;
@@ -935,102 +1032,175 @@ function hideChecking(){
 }
 
 /* ---------- run a check ---------- */
+// The API answers in one piece, so "Thinking about your situation" takes over once the evidence
+// has had a few seconds, and only when there is a profile to think about.
+const SITUATION_MS = 4000;
 async function runCheck(req, isRecheck){
   if (S.ctl) S.ctl.abort();
   const ctl = new AbortController(); S.ctl = ctl;
-  const n = S.checks + 1;
+  const n = isRecheck && S.last ? S.last.n : S.checks + 1;
   S.last = {req, data:null, savedId:null, n};
   if (S.view !== "verdict") go("verdict");
   const out = $("#verdictOut");
   if (CRISIS_RE.test(req.tip)){ hideChecking(); out.innerHTML = crisisView(); return; }
   showChecking(req, n);
   $("#stopBtn").addEventListener("click", () => ctl.abort());
-  const soft = setTimeout(() => { const m = $("#loadSub"); if (m) m.textContent = "Still checking. This one is taking longer than usual."; }, SOFT_HINT_MS);
+  const situation = req.profile ? setTimeout(() => { const m = $("#loadMsg"); if (m) m.textContent = "Thinking about your situation"; }, SITUATION_MS) : 0;
+  const soft = setTimeout(() => { const m = $("#loadSub"); if (m) m.textContent = "Still reviewing. This one is taking longer than usual."; }, SOFT_HINT_MS);
   let timedOut = false;
   const hard = setTimeout(() => { timedOut = true; ctl.abort(); }, HARD_TIMEOUT_MS);
   try{
     const {data} = await askVerity(req, {signal: ctl.signal});
     if (S.ctl !== ctl) return;
-    S.checks = n; saveStore();
+    if (!isRecheck) S.checks = n;
+    saveStore();
     S.last.data = data;
-    const from = S.sweepPos;
+    const sweep = {x: S.sweepPos, y: 50};
     hideChecking();
     if (data.status === "crisis"){ out.innerHTML = crisisView(); return; }
     if (data.status === "nothing_to_check"){ out.innerHTML = nothingView(); wireStateButtons(); return; }
-    out.innerHTML = cardView(data, req, n, reduceMotion() ? null : from);
+    const sw = isRecheck && S.switchFrom ? S.switchFrom : null;
+    out.innerHTML = cardView(data, req, n, sw ? sw.pos : (reduceMotion() ? null : sweep), sw);
     wireCard(data, req);
-    settle();
+    settleMarker(sw ? MOVE_MS : SETTLE_MS);
   }catch(e){
     if (S.ctl !== ctl) return;
     hideChecking();
     if (e && e.code === "cancelled" && !timedOut){ go("check"); return; }
     out.innerHTML = errorView(timedOut ? "timeout" : e && e.code);
     wireStateButtons();
-  }finally{ clearTimeout(soft); clearTimeout(hard); }
-}
-function settle(){
-  const pin = $("#verdictOut .ev .pin"); if (!pin) return;
-  const target = pin.dataset.pos + "%";
-  if (reduceMotion()){ pin.style.left = target; return; }
-  pin.parentElement.classList.add("settle");
-  requestAnimationFrame(() => requestAnimationFrame(() => { pin.style.left = target; }));
-  setTimeout(() => pin.parentElement.classList.remove("settle"), SETTLE_MS + 50);
+  }finally{ clearTimeout(situation); clearTimeout(soft); clearTimeout(hard); S.switchFrom = null; }
 }
 
-/* ---------- verdict (F-Verdict) ---------- */
-const VERDICT_WORD = {well_supported:"Well supported.", mixed:"Mixed evidence.", not_supported:"Not supported.", promotional:"Promotional."};
-const FIT_WORD = {for_you:"For you.", maybe:"Maybe for you.", not_for_you:"Not for you.", need_profile:"Add your profile to check fit."};
-function cardView(d, req, n, from){
+/* ---------- verdict (reference/design/v2/Verdict.html and Booth.html) ---------- */
+// "Updated for Maya: no card debt, so this no longer applies." Diffs the two profiles over the
+// fields the new verdict relied on; money fields with a plain phrase come first.
+const CHANGE_WORDS = {
+  high_interest_debt:{Yes:"card debt", No:"no card debt"},
+  emergency_savings:{Yes:"savings", No:"no savings yet"}
+};
+const UPDATE_END = {for_you:"now applies", not_for_you:"no longer applies", maybe:"may apply"};
+function changePhrase(k, v){
+  if (CHANGE_WORDS[k] && CHANGE_WORDS[k][v]) return CHANGE_WORDS[k][v];
+  if (v == null || v === "" || (Array.isArray(v) && !v.length)) return "no " + FIELD_LABELS[k];
+  return FIELD_LABELS[k] + " " + lc(Array.isArray(v) ? v.join(", ") : String(v));
+}
+function updateLine(sw, d, who){
+  if (!sw || !UPDATE_END[d.fit.verdict]) return "";
+  const before = DEMO_PROFILES[sw.demo] ? DEMO_PROFILES[sw.demo].profile || {} : {};
+  const after = profileForRequest() || {};
+  const keys = d.fit.profile_fields_used.slice().sort((a, b) => (CHANGE_WORDS[b] ? 1 : 0) - (CHANGE_WORDS[a] ? 1 : 0));
+  const k = keys.find(k => JSON.stringify(before[k] == null ? null : before[k]) !== JSON.stringify(after[k] == null ? null : after[k]));
+  return k ? "Updated for " + who + ": " + changePhrase(k, after[k]) + ", so this " + UPDATE_END[d.fit.verdict] + "." : "";
+}
+// Key figures: sources with a number come first, so the big figure is always data.
+function keyFigures(src){
+  const withFig = src.filter(s => s.figure);
+  return withFig.filter(s => /\d/.test(s.figure)).concat(withFig.filter(s => !/\d/.test(s.figure))).slice(0, 2);
+}
+const isQuote = (t) => /^[“"]/.test(t);
+function trustLine(){
+  const m = S.meth;
+  return 'Methodology · tested on 20 claims' + (m && m.score_all != null ? ', ' + m.score_all + ' of 20 correct' : '');
+}
+function cardView(d, req, n, from, sw){
+  const ev = d.evidence.verdict, fit = d.fit.verdict;
   const used = d.fit.profile_fields_used.map(k => FIELD_LABELS[k] || k);
+  const maya = S.booth && S.demo !== "none";
+  const who = maya ? "Maya" : "you";
+  const src = Array.isArray(d.source_details) ? d.source_details : [];
+  const figs = keyFigures(src);
+  const head = Array.isArray(d.headline) && d.headline.length ? d.headline : [EVIDENCE[ev].label + "."];
+  const upd = updateLine(sw, d, who);
   const meta = ["Nº "+n, req.source || "", CATS[d.category] || "Other"].filter(Boolean).join(" · ");
-  const metaLine = [d.evidence.basis ? "Basis: "+esc(d.evidence.basis) : "", esc(CONF[d.confidence])+" confidence",
-    d.red_flags.length ? '<span class="flags">Red flags: '+d.red_flags.map(f => esc(FLAGS[f])).join(", ")+'</span>' : ""].filter(Boolean).join(" · ");
-  let h = '<article class="stack" aria-label="Verdict">';
+  const switcher = (cls, label) => '<div class="switch '+cls+'" role="group" aria-label="Viewing as"><span class="label">'+label+'</span><div class="seg demo-seg"></div></div>';
+
+  let h = '<article class="vd" aria-label="Verdict">';
+  /* velvet panel */
   h += '<section class="on-green v-hero">'+
-    '<header><button type="button" class="mark-green" data-home aria-label="Verity home">verity</button><span class="meta">'+esc(meta)+'</span></header>'+
-    '<p class="quote">'+esc(d.claim_summary)+'</p>'+
-    '<h1 id="h-verdict" class="verdict fade-up">'+VERDICT_WORD[d.evidence.verdict]+'</h1>'+
-    evidenceScale(d.evidence.verdict, from)+
-  '</section>';
-  h += '<section class="v-body fade-up late">';
+    '<header><button type="button" class="mark-green" data-home aria-label="Verity home">verity</button><span class="meta">'+esc(meta)+
+      (S.booth ? '<span class="desk-only"> · Viewing as '+esc(DEMO_PROFILES[S.demo].label)+'</span>' : '')+'</span></header>'+
+    '<p class="v-claim">“'+esc(d.claim_summary)+'”</p>'+
+    '<div class="v-head"><h1 id="h-verdict" class="verdict fade-up">'+esc(head[0])+(head[1] ? '<br><em class="foil-text">'+esc(head[1])+'</em>' : '')+'</h1>'+
+      '<span class="v-meta">'+esc(EVIDENCE[ev].label)+' · '+esc(FIT[fit].label)+' · '+esc(CONF[d.confidence])+' confidence</span></div>'+
+    chartView(d, from, !!sw);
   if (S.booth){
-    h += '<div class="demo" role="group" aria-labelledby="demoLab2"><span class="label-strong" id="demoLab2">Demo profile</span><div class="seg demo-seg"></div></div>';
+    if (upd) h += '<div class="v-update phone-only"><span class="note">'+esc(upd)+'</span>'+(d.fit.reason ? '<p>'+esc(d.fit.reason)+'</p>' : '')+'</div>';
+    h += switcher("phone-only on-dark", "Viewing as");
   }
-  h += '<div class="stack" style="gap:8px"><p class="lead">'+esc(d.evidence.why)+'</p><p class="meta">'+metaLine+'</p></div>';
-  h += '<div class="v-sec">';
-  if (d.fit.verdict === "need_profile"){
-    h += '<h2 class="h2">Add your profile to check fit.</h2>';
-    if (S.booth) h += '<p>Pick a demo profile above to see whether this fits.</p>';
-    else if (req.profile) h += '<p>Your profile doesn\'t cover what this tip depends on yet.</p><div><button type="button" class="link" data-go="profile">Add to my profile</button></div>';
-    else h += '<p>Fill in a few profile fields and Verity can tell you whether this fits you.</p><div><button type="button" class="link" data-go="profile">Set up my profile</button></div>';
+  h += '</section>';
+
+  /* ivory column */
+  h += '<section class="v-body fade-up late">';
+  if (S.booth) h += switcher("desk-only", "Same advice, different life. Switch profiles to see the fit change.");
+  h += '<div class="v-sec2"><span class="label">The evidence</span>';
+  h += '<div class="ev-row">'+(figs[0] ? '<div class="fig-side desk-only"><span class="fig">'+esc(figs[0].figure)+'</span><span class="fl">'+esc(figs[0].figure_label || "")+'</span></div>' : '')+
+       '<p class="read">'+esc(d.evidence.why)+'</p></div>';
+  if (figs.length){
+    h += '<div class="keyfig phone-only">'+figs.map(f => '<div><span class="fig'+(/\d/.test(f.figure) ? '' : ' phrase')+'">'+esc(f.figure)+'</span>'+
+      '<span class="fl">'+esc(f.figure_label || "")+'</span><span class="fo">'+esc(f.org)+' · '+esc(f.date)+'</span></div>').join("")+'</div>';
+  }
+  if (src.length){
+    h += '<span class="label srclab">Sources · '+src.length+' vetted</span><div class="srcs">'+src.map(s =>
+      '<div class="src"><span class="so">'+esc(s.org)+' · '+esc(s.type)+' · '+esc(s.date)+'</span>'+
+      '<span class="sf'+(isQuote(s.finding) ? ' q' : '')+'">'+esc(s.finding)+'</span>'+
+      '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+' ↗</a></div>').join("")+'</div>';
+    h += '<span class="label">Evidence base: '+esc(d.evidence_base || "vetted sources")+' · '+esc(CONF[d.confidence])+' confidence</span>';
   } else {
-    h += '<h2 class="h2">'+FIT_WORD[d.fit.verdict]+'</h2>'+fitScale(d.fit.verdict);
-    if (d.fit.reason) h += '<p>'+esc(d.fit.reason)+'</p>';
-    h += '<p class="meta">Based on: '+(used.length ? esc(used.join(", ")) : "the evidence, since no profile field changed the answer")+'</p>';
+    h += '<span class="label">Basis: '+esc(d.evidence.basis || "expert guidance")+' · '+esc(CONF[d.confidence])+' confidence</span>'+
+         '<span class="label">No vetted source on file for this claim yet.</span>';
   }
-  h += '</div>';
-  h += '<div class="v-sec" style="gap:6px"><h2 class="h3">Safer next step</h2><p>'+esc(d.next_step)+'</p></div>';
+  if (d.red_flags.length) h += '<p class="flags">Red flags: '+d.red_flags.map(f => esc(FLAGS[f])).join(", ")+'</p>';
+  h += '</div><div class="hr"></div>';
+
+  h += '<div class="v-sec2 fitsec"><span class="label">For '+(maya ? "Maya's" : "your")+' situation</span>';
+  if (fit === "need_profile"){
+    if (S.booth) h += '<p class="read">Switch to one of Maya\'s profiles to see whether this fits.</p>';
+    else if (req.profile) h += '<p class="read">Your profile doesn\'t cover what this depends on yet.</p><div><button type="button" class="link" data-go="profile">Add to your profile</button></div>';
+    else h += '<p class="read">Add a few details to your profile and Verity can tell you whether this fits your life.</p><div><button type="button" class="link" data-go="profile">Set up your profile</button></div>';
+  } else {
+    if (upd) h += '<span class="note'+(S.booth ? ' desk-only' : '')+'">'+esc(upd)+'</span>';
+    if (d.fit.reason) h += '<p class="read">'+esc(d.fit.reason)+'</p>';
+    h += '<span class="label">Based on: '+(used.length ? esc(used.join(" · ")) : "the evidence, since no profile detail changed the answer")+'</span>';
+  }
+  h += '</div><div class="hr"></div>';
+
+  h += '<div class="v-sec2 start"><span class="label">A good place to start</span><p>'+esc(d.next_step)+'</p></div>';
   if (d.ask_a_pro.needed){
-    const who = d.ask_a_pro.who !== "none" ? d.ask_a_pro.who : "a professional";
-    const article = who === "a professional" ? who : (/^[aeiou]/i.test(who) ? "an "+who : "a "+who);
-    h += '<div class="v-sec" style="gap:6px"><h2 class="h3">When to ask a pro</h2><p>Talk to '+esc(article)+'. '+esc(d.ask_a_pro.why)+'</p></div>';
+    const pro = d.ask_a_pro.who !== "none" ? d.ask_a_pro.who : "a professional";
+    const article = pro === "a professional" ? pro : (/^[aeiou]/i.test(pro) ? "an "+pro : "a "+pro);
+    h += '<div class="v-sec2"><span class="label">When to ask a professional</span><p class="read">Talk to '+esc(article)+'. '+esc(d.ask_a_pro.why)+'</p></div>';
   }
-  h += '<div class="v-actions"><button type="button" class="btn" id="saveBtn">Save to My Proof</button>'+
+  h += '<div class="v-actions"><button type="button" class="btn tall" id="saveBtn">Save to My Proof</button>'+
        '<button type="button" class="link" id="againBtn">Check another</button></div>';
   h += '<textarea id="copyFallback" class="input" rows="6" hidden aria-label="Verdict text to copy"></textarea>';
-  h += '<div class="v-links"><button type="button" class="link small" id="copyBtn">Copy card</button><button type="button" class="link small" data-go="how">How Verity decides</button></div>';
-  h += '<p class="disclaimer" style="margin-bottom:24px">Verity explains evidence. It isn\'t medical, legal or financial advice.</p>';
+  h += '<div class="trust"><button type="button" class="link small" data-meth>'+esc(trustLine())+'</button>'+
+       '<button type="button" class="link small" id="copyBtn">Copy card</button>'+
+       '<p class="disclaimer">Verity explains evidence. It isn\'t medical, legal or financial advice.</p></div>';
+  h += methRow();
   h += '</section></article>';
   return h;
 }
+// The four figures pinned under the desktop verdict. Hidden until eval results are published.
+function methRow(){
+  const m = S.meth; if (!m) return '';
+  const cell = (v, l) => '<div><span class="mv">'+esc(v)+'</span><span class="ml">'+esc(l)+'</span></div>';
+  return '<div class="meth-row desk-only"><button type="button" class="label meth-title" data-meth>Methodology · '+esc(m.model_name || m.model)+' · '+esc(m.date)+'</button>'+
+    '<div class="meth-cells">'+cell(m.score_all+"/20","all claims")+cell(m.score_unseen+"/19","unseen claims")+
+    cell(m.runs_consistent+"/"+m.runs,"runs consistent")+cell(String(m.guardrail_breaks),"guardrail breaks")+'</div></div>';
+}
 function cardText(d){
-  const lines = ["verity. tip check", "", "Claim: "+d.claim_summary,
-    "Evidence: "+EVIDENCE[d.evidence.verdict].label+". "+d.evidence.why];
+  const head = Array.isArray(d.headline) ? d.headline.join(" ") : EVIDENCE[d.evidence.verdict].label + ".";
+  const lines = ["verity · advice review", "", "Claim: "+d.claim_summary, head, "",
+    "The evidence: "+EVIDENCE[d.evidence.verdict].label+". "+d.evidence.why];
   if (d.red_flags.length) lines.push("Red flags: "+d.red_flags.map(f => FLAGS[f]).join(", "));
-  lines.push("Fit: "+FIT[d.fit.verdict].label+(d.fit.verdict!=="need_profile" && d.fit.reason ? ". "+d.fit.reason : ""));
-  lines.push("Safer next step: "+d.next_step);
-  if (d.ask_a_pro.needed) lines.push("Ask a pro: "+d.ask_a_pro.who+". "+d.ask_a_pro.why);
-  lines.push("Confidence: "+CONF[d.confidence], "", "Verity explains evidence. It isn't medical, legal or financial advice.");
+  lines.push("For your situation: "+FIT[d.fit.verdict].label+(d.fit.verdict!=="need_profile" && d.fit.reason ? ". "+d.fit.reason : ""));
+  lines.push("A good place to start: "+d.next_step);
+  if (d.ask_a_pro.needed) lines.push("Ask a professional: "+d.ask_a_pro.who+". "+d.ask_a_pro.why);
+  lines.push("Confidence: "+CONF[d.confidence]);
+  const src = Array.isArray(d.source_details) ? d.source_details : [];
+  if (src.length){ lines.push("", "Sources:"); src.forEach(s => lines.push("- "+s.title+" ("+s.org+", "+s.date+"): "+s.url)); }
+  lines.push("", "Verity explains evidence. It isn't medical, legal or financial advice.");
   return lines.join("\n");
 }
 function wireCard(d, req){
@@ -1041,7 +1211,7 @@ function wireCard(d, req){
   save.addEventListener("click", () => {
     const id = "p" + Date.now().toString(36);
     S.proof.unshift({id, at:Date.now(), tip:req.tip, source:req.source||"", category:d.category, claim:d.claim_summary,
-      evidence:d.evidence.verdict, fit:d.fit.verdict, confidence:d.confidence, tried:"not_yet", outcome:"", note:""});
+      evidence:d.evidence.verdict, fit:d.fit.verdict, confidence:d.confidence, sources:(d.sources||[]).slice(), tried:"not_yet", outcome:"", note:""});
     S.last.savedId = id; saveStore(); markSaved();
     toast(storageOK ? "Saved to My Proof" : "Saved until you close the page");
   });
@@ -1052,24 +1222,24 @@ function wireCard(d, req){
 /* ---------- states ---------- */
 const stateHead = '<header class="top"><button type="button" class="mark-ivory" data-home aria-label="Verity home">verity<span class="dot" aria-hidden="true"></span></button></header>';
 function errorView(code){
-  let title = "Couldn't check this one. Try rephrasing it.", body = "Something went wrong reading the answer. You can try again, or edit the tip.", retry = true;
+  let title = "Couldn't review this one. Try rephrasing it.", body = "Something went wrong reading the answer. You can try again, or edit the advice.", retry = true;
   if (code === "rate_limited"){
-    title = "Too many checks at once."; body = "Wait a minute, then try again.";
+    title = "Too many reviews at once."; body = "Wait a minute, then try again.";
   } else if (code === "busy"){
-    title = "Verity is resting. Try again tomorrow."; body = "Verity has a daily limit on checks, and today's is used up."; retry = false;
+    title = "Verity is resting. Try again tomorrow."; body = "Verity has a daily limit on reviews, and today's is used up."; retry = false;
   } else if (code === "timeout"){
     title = "This one took too long."; body = "Verity couldn't finish in time. Try again, or paste just the claim.";
   } else if (code === "network"){
     title = "You seem to be offline."; body = "Check your connection, then try again.";
   } else if (code === "upstream"){
-    body = "Verity couldn't reach its checker just now. Try again in a moment.";
+    body = "Verity couldn't reach its reviewer just now. Try again in a moment.";
   }
   return stateHead+'<div class="state" role="alert"><h1 id="h-verdict" class="h2">'+esc(title)+'</h1><p class="muted">'+esc(body)+'</p><div class="row">'+
     (retry ? '<button type="button" class="btn" id="retryBtn">Try again</button>' : '')+
-    '<button type="button" class="link" id="editBtn">Edit the tip</button></div></div>';
+    '<button type="button" class="link" id="editBtn">Edit the advice</button></div></div>';
 }
 function nothingView(){
-  return stateHead+'<div class="state"><h1 id="h-verdict" class="h2">Nothing to check here.</h1><p class="muted">Verity checks tips that make a claim, like "Retinol works better at night" or "You need six months of savings." Paste one you\'ve seen.</p><div class="row"><button type="button" class="btn" id="editBtn">Paste a tip</button></div></div>';
+  return stateHead+'<div class="state"><h1 id="h-verdict" class="h2">Nothing to review here.</h1><p class="muted">Verity reviews advice that makes a claim, like "Retinol works better at night" or "You need six months of savings." Paste some you\'ve seen.</p><div class="row"><button type="button" class="btn" id="editBtn">Paste advice</button></div></div>';
 }
 function crisisView(){
   return stateHead+'<div class="state" role="alert"><h1 id="h-verdict" class="h2">It sounds like things might be hard right now.</h1>'+
@@ -1088,13 +1258,13 @@ function renderProof(){
   const worked = all.filter(p => p.outcome === "worked").length;
   const checks = Math.max(S.checks, all.length);
   $("#proofSummary").innerHTML = checks === 0 ? "Your own evidence builds here." :
-    "You've checked <b>"+checks+" tip"+(checks===1?"":"s")+"</b>. <b>"+worked+" worked</b> for you.";
+    "<b>"+checks+" review"+(checks===1?"":"s")+"</b>. <b>"+worked+" worked</b> for you.";
   const fl = $("#proofFilter");
   segment(fl, [{value:"all",label:"All"},{value:"beauty",label:"Beauty"},{value:"wellness",label:"Wellness"},{value:"money",label:"Money"}], S.filter, (v) => { S.filter = v; renderProof(); });
   const list = $("#proofList"); list.innerHTML = "";
   const items = all.filter(p => S.filter === "all" || p.category === S.filter);
   if (!items.length){
-    list.innerHTML = '<li class="empty"><p class="h3">'+(all.length ? "Nothing saved in this category yet." : "Nothing saved yet.")+'</p><p class="muted">Check a tip, then tap Save to My Proof. Mark what you tried and how it went, and this becomes your own evidence.</p><div><button type="button" class="link" data-go="check">Check a tip</button></div></li>';
+    list.innerHTML = '<li class="empty"><p class="h3">'+(all.length ? "Nothing saved in this category yet." : "Nothing saved yet.")+'</p><p class="muted">Review some advice, then tap Save to My Proof. Mark what you tried and how it went, and this becomes your own evidence.</p><div><button type="button" class="link" data-go="check">Review advice</button></div></li>';
     return;
   }
   for (const p of items){
@@ -1143,12 +1313,45 @@ function renderProof(){
   $("#legend").innerHTML = h;
 })();
 
+/* ---------- methodology ---------- */
+// eval/results/latest.json, copied to public/ at build. Never hardcoded: with no file, the section and scores stay hidden.
+const fmtDate = (d) => { const t = new Date(d + "T12:00:00"); return isNaN(t) ? d : t.toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}); };
+function renderMethodology(){
+  const m = S.meth, sect = $("#methodology"); if (!m){ sect.hidden = true; return; }
+  const row = (k, v) => '<tr><th scope="row">'+esc(k)+'</th><td>'+esc(v)+'</td></tr>';
+  $("#methRows").innerHTML =
+    row("Runs", String(m.runs))+
+    row("Score per run", m.per_run.join(", ")+" of 20")+
+    row("Unseen claims", m.per_run_unseen.join(", ")+" of 19")+
+    row("Demo-claim consistency", m.demo_consistent+" of "+m.demo_total+" claims")+
+    row("Guardrail violations", String(m.guardrail_breaks))+
+    row("Ask-a-pro checks", m.ask_pro.map(a => "#"+a.id+" "+a.hits+"/"+m.runs).join(", "))+
+    row("Average latency", (m.avg_ms/1000).toFixed(1)+" s")+
+    row("Model", m.model_name || m.model)+
+    row("Date", fmtDate(m.date));
+  sect.hidden = false;
+}
+async function loadMethodology(){
+  try{
+    const r = await fetch("/latest.json", {cache:"no-store"});
+    if (!r.ok) return;
+    const m = await r.json();
+    if (m && Number.isFinite(m.score_all) && Array.isArray(m.per_run)){ S.meth = m; renderMethodology(); }
+  }catch(e){}
+}
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("[data-meth]")) return;
+  go("how");
+  const sect = $("#methodology");
+  if (!sect.hidden) sect.scrollIntoView({block:"start"});
+});
+
 /* ---------- boot ---------- */
 const hash = (location.hash || "").replace(/^#/, "");
 let qs = ""; try{ qs = location.search || ""; }catch(e){}
 S.booth = /[?&]booth=1\b/.test(qs);
 if (S.booth) document.documentElement.classList.add("booth");
-renderCheckControls(); renderExamples(); renderDemo(); renderProfile();
+renderCheckControls(); renderExamples(); renderDemo(); renderProfile(); loadMethodology();
 if (S.booth) go("check");
 else if (VIEWS.includes(hash) && hash !== "verdict") go(hash);
 else go("welcome");
