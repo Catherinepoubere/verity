@@ -3,7 +3,7 @@
 // Never logs tip text or profile data.
 import Anthropic from "@anthropic-ai/sdk";
 import { createHash } from "node:crypto";
-import { CRISIS_RE, DEFAULT_MODEL, sanitizeRequest, checkTip } from "../lib/verity.js";
+import { CRISIS_RE, DEFAULT_MODEL, sanitizeRequest, checkTip, present } from "../lib/verity.js";
 
 const MAX_BODY = 8 * 1024;
 const PER_MINUTE = 10, PER_DAY = 60;
@@ -125,7 +125,7 @@ export default async function handler(req, res){
   }
   try{
     const { data, attempts } = await checkTip(getClient(), input, { model: MODEL });
-    return done(200, data, { result: data.status, attempts });
+    return done(200, present(data), { result: data.status, attempts });
   }catch(e){
     const code = (e && e.code) || "upstream";
     // An error with no code was thrown before any request left (for example while creating the client).
