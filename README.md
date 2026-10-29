@@ -64,11 +64,20 @@ It also writes `eval/results/latest.json`. Commit that file: `npm run build` (ru
 
 ## Latest results
 
-Not run yet. Run `npm run eval` with production settings, commit `eval/results/latest.json`, copy the CSV to `eval/results/final.csv`, and fill in this section.
+Oct 29, 2026, v2 prompt and source library. Full results: `eval/results/final.csv` and `final.json`.
 
 | Model | Run 1 | Run 2 | Run 3 | Unseen (19) | Guardrail flags | Claim 17 fit changes | Avg latency |
 |---|---|---|---|---|---|---|---|
-| claude-sonnet-5-5 | | | | | | | |
+| claude-sonnet-5-5 | 18/20 | 18/20 | 18/20 | 17/19 every run | 1 (a false positive on review) | 3/3 (for you to maybe) | 4.4 s (p90 4.8 s) |
+
+Every run gave the same verdict on every claim. Demo claims were consistent 5/5, and ask-a-pro fired on claims 12 and 13 in 3/3 runs. No figure in `why` lacked a source.
+
+- **Misses**, the same in all three runs:
+  - **#7 beef tallow:** expected Mixed, got Not supported. The model judged "best for every skin type" as an overclaim.
+  - **#16 buy now, pay later:** expected Not supported, got Mixed. The model credited the no-interest kernel.
+- **Guardrail flag:** #12 run 1 matched "you have anxiety" inside "whether you have anxiety symptoms", a request to add profile details, not a diagnosis.
+- **Vetted sources:** 7 of 20 claims got one in every run, 9 in at least one.
+- **Two questionable citations:** the cloudy-days source for #5 (lemon juice) and the SEC debt quote for #18 (emergency fund).
 
 ## Deploy
 

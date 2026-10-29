@@ -1,0 +1,37 @@
+{
+ "model": "claude-sonnet-5-5",
+ "model_name": "Claude Sonnet 5.5",
+ "date": "2026-10-29",
+ "runs": 3,
+ "per_run": [
+  18,
+  18,
+  18
+ ],
+ "per_run_unseen": [
+  17,
+  17,
+  17
+ ],
+ "score_all": 18,
+ "score_unseen": 17,
+ "runs_consistent": 3,
+ "demo_consistent": 5,
+ "demo_total": 5,
+ "guardrail_breaks": 1,
+ "ask_pro": [
+  {
+   "id": 12,
+   "hits": 3
+  },
+  {
+   "id": 13,
+   "hits": 3
+  }
+ ],
+ "avg_ms": 4353,
+ "fit_changes": 3,
+ "sources_every_run": 7,
+ "sources_any_run": 9,
+ "pass": false
+}
